@@ -8,6 +8,7 @@ import TopicDetail from './pages/TopicDetail';
 import POTDList from './pages/potd/POTDList';
 import POTDDetail from './pages/potd/POTDDetail';
 import CheatSheets from './pages/cheatsheets/CheatSheets';
+import SystemDesign from './pages/system-design/SystemDesign';
 import './App.css';
 
 // Initialize GA4 with your Measurement ID
@@ -36,6 +37,7 @@ function App() {
             <Route path="/potd" element={<POTDList />} />
             <Route path="/potd/:id" element={<POTDDetail />} />
             <Route path="/cheatsheets" element={<CheatSheets />} />
+            <Route path="/system-design" element={<SystemDesign />} />
             <Route path="/topic/:id" element={<TopicDetail />} />
           </Routes>
         </div>
