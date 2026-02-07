@@ -12,6 +12,7 @@ function Navigation() {
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/">Home</Nav.Link>
             <Nav.Link as={Link} to="/potd">Problem of the Day</Nav.Link>
+            <Nav.Link as={Link} to="/cheatsheets">Cheat Sheets</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
