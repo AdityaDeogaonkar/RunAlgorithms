@@ -9,7 +9,7 @@ function Home() {
     <Container className="my-5">
       <div className="text-center mb-5">
         <h1>Welcome to RunAlgorithms</h1>
-        <p className="lead">Master Data Structures and Algorithms with our curated magical journey.</p>
+        <p className="lead">Explore Data Structures and Algorithms with RunAlgorithms.</p>
         
         {/* Prominent Button for POTD */}
         <div className="mt-4">
