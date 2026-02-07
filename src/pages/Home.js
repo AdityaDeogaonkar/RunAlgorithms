@@ -7,8 +7,8 @@ function Home() {
   return (
     <Container className="my-5">
       <div className="text-center mb-5">
-        <h1>Welcome to DSA Master</h1>
-        <p className="lead">Master Data Structures and Algorithms with curated questions and resources.</p>
+        <h1>Welcome to RunAlgorithms</h1>
+        <p className="lead">Master Data Structures and Algorithms with our curated magical journey.</p>
       </div>
       <Row xs={1} md={2} lg={3} className="g-4">
         {topics.map(topic => (
