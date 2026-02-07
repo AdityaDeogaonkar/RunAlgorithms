@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { cheatSheets } from './cheatSheetData';
 
 function CheatSheets() {
@@ -11,7 +12,7 @@ function CheatSheets() {
         <p className="lead text-muted">Essential templates, patterns, and complexity charts for quick revision.</p>
       </div>
 
-      <Row xs={1} md={2} lg={2} className="g-4">
+      <Row xs={1} md={1} lg={1} className="g-4">
         {cheatSheets.map((sheet) => (
           <Col key={sheet.id}>
             <Card className="h-100 shadow-sm border-0 cheat-sheet-card">
@@ -21,7 +22,7 @@ function CheatSheets() {
               <Card.Body className="p-4 bg-light">
                 <p className="text-muted mb-3">{sheet.description}</p>
                 <div className="markdown-content cheat-sheet-content bg-white p-3 rounded border">
-                  <ReactMarkdown>{sheet.content}</ReactMarkdown>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{sheet.content}</ReactMarkdown>
                 </div>
               </Card.Body>
             </Card>
