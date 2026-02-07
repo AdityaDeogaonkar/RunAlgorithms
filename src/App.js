@@ -4,7 +4,8 @@ import { Container } from 'react-bootstrap';
 import Navigation from './components/Navigation';
 import Home from './pages/Home';
 import TopicDetail from './pages/TopicDetail';
-import POTD from './pages/potd/POTD';
+import POTDList from './pages/potd/POTDList';
+import POTDDetail from './pages/potd/POTDDetail';
 import './App.css';
 
 function App() {
@@ -15,7 +16,8 @@ function App() {
         <div className="flex-grow-1">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/potd" element={<POTD />} />
+            <Route path="/potd" element={<POTDList />} />
+            <Route path="/potd/:id" element={<POTDDetail />} />
             <Route path="/topic/:id" element={<TopicDetail />} />
           </Routes>
         </div>
