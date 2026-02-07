@@ -34,7 +34,7 @@ export const cheatSheets = [
 ### Breadth-First Search (BFS)
 Used for finding the shortest path in unweighted graphs.
 
-```cpp
+\`\`\`cpp
 void bfs(int startNode, vector<vector<int>>& adj, int n) {
     vector<bool> visited(n, false);
     queue<int> q;
@@ -55,12 +55,12 @@ void bfs(int startNode, vector<vector<int>>& adj, int n) {
         }
     }
 }
-```
+\`\`\`
 
 ### Depth-First Search (DFS)
 Used for exploring all paths, cycle detection, and topological sort.
 
-```cpp
+\`\`\`cpp
 void dfs(int u, vector<vector<int>>& adj, vector<bool>& visited) {
     visited[u] = true;
     cout << u << " "; // Process node
@@ -71,7 +71,7 @@ void dfs(int u, vector<vector<int>>& adj, vector<bool>& visited) {
         }
     }
 }
-```
+\`\`\`
     `
   },
   {
@@ -82,7 +82,7 @@ void dfs(int u, vector<vector<int>>& adj, vector<bool>& visited) {
 ### Sliding Window Template
 Commonly used for finding the longest/shortest substring with a condition.
 
-```cpp
+\`\`\`cpp
 int slidingWindow(string s) {
     int left = 0, right = 0;
     int n = s.length();
@@ -109,7 +109,7 @@ int slidingWindow(string s) {
     }
     return maxLength;
 }
-```
+\`\`\`
     `
   },
   {
@@ -120,7 +120,7 @@ int slidingWindow(string s) {
 ### Binary Search Template
 Finds the index of a target value in a sorted array. Returns -1 if not found.
 
-```cpp
+\`\`\`cpp
 int binarySearch(vector<int>& nums, int target) {
     int left = 0;
     int right = nums.size() - 1;
@@ -138,7 +138,7 @@ int binarySearch(vector<int>& nums, int target) {
     }
     return -1; // Not found
 }
-```
+\`\`\`
     `
   }
 ];
