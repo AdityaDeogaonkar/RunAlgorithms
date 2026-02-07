@@ -29,6 +29,22 @@ const SEO = ({ title, description, url, image }) => {
       <meta property="twitter:title" content={fullTitle} />
       <meta property="twitter:description" content={metaDescription} />
       <meta property="twitter:image" content={metaImage} />
+      
+      {/* JSON-LD Schema */}
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "RunAlgorithms",
+          "url": "https://runalgorithms.com",
+          "description": metaDescription,
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://runalgorithms.com/?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        })}
+      </script>
     </Helmet>
   );
 };

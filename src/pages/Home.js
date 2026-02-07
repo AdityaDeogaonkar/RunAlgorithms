@@ -9,8 +9,8 @@ function Home() {
   return (
     <Container className="my-5">
       <SEO 
-        title="Home"
-        description="Master Data Structures, Algorithms, and System Design with curated problems, cheatsheets, and daily challenges."
+        title="Master Data Structures, Algorithms & System Design"
+        description="RunAlgorithms is your free guide to mastering Data Structures, Algorithms, and System Design. Access curated LeetCode problems, cheatsheets, and interview prep resources."
         url="/"
       />
       <div className="text-center mb-5">
@@ -31,6 +31,7 @@ function Home() {
         </div>
       </div>
       
+      <h2 className="text-center mb-4">DSA Topics & Roadmaps</h2>
       <Row xs={1} md={2} lg={3} className="g-4">
         {topics.map(topic => (
           <Col key={topic.id}>
@@ -38,6 +39,17 @@ function Home() {
           </Col>
         ))}
       </Row>
+
+      <div className="mt-5 text-center">
+        <h2 className="mb-3">Why RunAlgorithms?</h2>
+        <Row className="justify-content-center">
+            <Col md={8}>
+                <p className="text-muted">
+                    We provide a structured path to crack technical interviews. From <strong>Array manipulation</strong> to complex <strong>System Design</strong> case studies, everything is curated for efficiency.
+                </p>
+            </Col>
+        </Row>
+      </div>
     </Container>
   );
 }
