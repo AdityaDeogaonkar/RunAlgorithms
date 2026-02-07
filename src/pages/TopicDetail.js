@@ -18,6 +18,15 @@ function TopicDetail() {
     );
   }
 
+  const getDifficultyColor = (difficulty) => {
+    switch (difficulty.toLowerCase()) {
+      case 'easy': return 'success';
+      case 'medium': return 'warning';
+      case 'hard': return 'danger';
+      default: return 'secondary';
+    }
+  };
+
   return (
     <Container className="my-5">
       <SEO 
