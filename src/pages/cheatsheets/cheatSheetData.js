@@ -1,144 +1,52 @@
 export const cheatSheets = [
   {
-    id: "time-complexity",
-    title: "Time Complexity (Big O)",
-    description: "Quick reference for common algorithm complexities.",
+    id: "time-space-complexity",
+    title: "Time & Space Complexity (Big O)",
+    description: "Comprehensive guide to Best, Average, and Worst case complexities for Data Structures and Algorithms.",
     content: `
-### Big O Complexity Chart
+### Data Structures Complexity
 
-| Data Structure | Access | Search | Insertion | Deletion |
-| :--- | :--- | :--- | :--- | :--- |
-| **Array** | O(1) | O(n) | O(n) | O(n) |
-| **Stack** | O(n) | O(n) | O(1) | O(1) |
-| **Queue** | O(n) | O(n) | O(1) | O(1) |
-| **Linked List** | O(n) | O(n) | O(1) | O(1) |
-| **Hash Table** | N/A | O(1) | O(1) | O(1) |
-| **BST** | O(n) | O(n) | O(n) | O(n) |
-| **AVL Tree** | O(log n) | O(log n) | O(log n) | O(log n) |
+| Data Structure | Access (Avg) | Search (Avg) | Insertion (Avg) | Deletion (Avg) | Access (Worst) | Search (Worst) | Insertion (Worst) | Deletion (Worst) | Space Complexity |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Array** | O(1) | O(n) | O(n) | O(n) | O(1) | O(n) | O(n) | O(n) | O(n) |
+| **Stack** | O(n) | O(n) | O(1) | O(1) | O(n) | O(n) | O(1) | O(1) | O(n) |
+| **Queue** | O(n) | O(n) | O(1) | O(1) | O(n) | O(n) | O(1) | O(1) | O(n) |
+| **Singly Linked List** | O(n) | O(n) | O(1) | O(1) | O(n) | O(n) | O(1) | O(1) | O(n) |
+| **Doubly Linked List** | O(n) | O(n) | O(1) | O(1) | O(n) | O(n) | O(1) | O(1) | O(n) |
+| **Hash Table** | N/A | O(1) | O(1) | O(1) | N/A | O(n) | O(n) | O(n) | O(n) |
+| **Binary Search Tree** | O(log n) | O(log n) | O(log n) | O(log n) | O(n) | O(n) | O(n) | O(n) | O(n) |
+| **AVL Tree** | O(log n) | O(log n) | O(log n) | O(log n) | O(log n) | O(log n) | O(log n) | O(log n) | O(n) |
+| **B-Tree** | O(log n) | O(log n) | O(log n) | O(log n) | O(log n) | O(log n) | O(log n) | O(log n) | O(n) |
+| **Red-Black Tree** | O(log n) | O(log n) | O(log n) | O(log n) | O(log n) | O(log n) | O(log n) | O(log n) | O(n) |
 
-### Sorting Algorithms
+### Sorting Algorithms Complexity
 
-| Algorithm | Best | Average | Worst | Space |
+| Algorithm | Best Time | Average Time | Worst Time | Space Complexity |
 | :--- | :--- | :--- | :--- | :--- |
 | **Quick Sort** | O(n log(n)) | O(n log(n)) | O(n^2) | O(log(n)) |
 | **Merge Sort** | O(n log(n)) | O(n log(n)) | O(n log(n)) | O(n) |
 | **Heap Sort** | O(n log(n)) | O(n log(n)) | O(n log(n)) | O(1) |
 | **Bubble Sort** | O(n) | O(n^2) | O(n^2) | O(1) |
-    `
-  },
-  {
-    id: "bfs-dfs",
-    title: "Graph Traversals (BFS & DFS)",
-    description: "Standard templates for Breadth-First Search and Depth-First Search.",
-    content: `
-### Breadth-First Search (BFS)
-Used for finding the shortest path in unweighted graphs.
+| **Insertion Sort** | O(n) | O(n^2) | O(n^2) | O(1) |
+| **Selection Sort** | O(n^2) | O(n^2) | O(n^2) | O(1) |
+| **Tree Sort** | O(n log(n)) | O(n log(n)) | O(n^2) | O(n) |
+| **Shell Sort** | O(n log(n)) | O(n(log(n))^2) | O(n(log(n))^2) | O(1) |
+| **Bucket Sort** | O(n+k) | O(n+k) | O(n^2) | O(n) |
+| **Radix Sort** | O(nk) | O(nk) | O(nk) | O(n+k) |
+| **Counting Sort** | O(n+k) | O(n+k) | O(n+k) | O(k) |
 
-\`\`\`cpp
-void bfs(int startNode, vector<vector<int>>& adj, int n) {
-    vector<bool> visited(n, false);
-    queue<int> q;
+### Graph Algorithms Complexity
 
-    visited[startNode] = true;
-    q.push(startNode);
-
-    while (!q.empty()) {
-        int u = q.front();
-        q.pop();
-        cout << u << " "; // Process node
-
-        for (int v : adj[u]) {
-            if (!visited[v]) {
-                visited[v] = true;
-                q.push(v);
-            }
-        }
-    }
-}
-\`\`\`
-
-### Depth-First Search (DFS)
-Used for exploring all paths, cycle detection, and topological sort.
-
-\`\`\`cpp
-void dfs(int u, vector<vector<int>>& adj, vector<bool>& visited) {
-    visited[u] = true;
-    cout << u << " "; // Process node
-
-    for (int v : adj[u]) {
-        if (!visited[v]) {
-            dfs(v, adj, visited);
-        }
-    }
-}
-\`\`\`
-    `
-  },
-  {
-    id: "sliding-window",
-    title: "Sliding Window Pattern",
-    description: "Template for variable-size sliding window problems.",
-    content: `
-### Sliding Window Template
-Commonly used for finding the longest/shortest substring with a condition.
-
-\`\`\`cpp
-int slidingWindow(string s) {
-    int left = 0, right = 0;
-    int n = s.length();
-    int maxLength = 0;
-    
-    // Map to store frequency or other state
-    unordered_map<char, int> count;
-
-    while (right < n) {
-        // 1. Expand window
-        char c = s[right];
-        count[c]++;
-        
-        // 2. Shrink window if condition is violated
-        while (/* condition is false, e.g., count[c] > 1 */) {
-            char leftChar = s[left];
-            count[leftChar]--;
-            left++;
-        }
-        
-        // 3. Update result
-        maxLength = max(maxLength, right - left + 1);
-        right++;
-    }
-    return maxLength;
-}
-\`\`\`
-    `
-  },
-  {
-    id: "binary-search",
-    title: "Binary Search",
-    description: "Standard template for searching in sorted arrays.",
-    content: `
-### Binary Search Template
-Finds the index of a target value in a sorted array. Returns -1 if not found.
-
-\`\`\`cpp
-int binarySearch(vector<int>& nums, int target) {
-    int left = 0;
-    int right = nums.size() - 1;
-
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-
-        if (nums[mid] == target) {
-            return mid; // Found
-        } else if (nums[mid] < target) {
-            left = mid + 1; // Search right half
-        } else {
-            right = mid - 1; // Search left half
-        }
-    }
-    return -1; // Not found
-}
-\`\`\`
+| Algorithm | Time Complexity | Space Complexity |
+| :--- | :--- | :--- |
+| **Breadth-First Search (BFS)** | O(V + E) | O(V) |
+| **Depth-First Search (DFS)** | O(V + E) | O(V) |
+| **Dijkstra's Algorithm** | O((V + E) log V) | O(V) |
+| **Bellman-Ford Algorithm** | O(VE) | O(V) |
+| **Floyd-Warshall Algorithm** | O(V^3) | O(V^2) |
+| **Prim's Algorithm** | O(E log V) | O(V + E) |
+| **Kruskal's Algorithm** | O(E log E) | O(V + E) |
+| **Topological Sort** | O(V + E) | O(V) |
     `
   }
 ];
