@@ -2,11 +2,17 @@ import React from 'react';
 import { Container, Row, Col, Card, Accordion } from 'react-bootstrap';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import SEO from '../../components/SEO';
 import { systemDesignTopics } from './systemDesignData';
 
 function SystemDesign() {
   return (
     <Container className="my-5">
+      <SEO 
+        title="System Design Guide" 
+        description="Learn System Design concepts (CAP Theorem, Load Balancing) and explore real-world architecture case studies (TinyURL, Twitter)."
+        url="/system-design"
+      />
       <div className="text-center mb-5">
         <h1>🏗️ System Design</h1>
         <p className="lead text-muted">Master the art of designing scalable, reliable, and efficient systems.</p>

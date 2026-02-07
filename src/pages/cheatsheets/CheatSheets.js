@@ -2,11 +2,17 @@ import React from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import SEO from '../../components/SEO';
 import { cheatSheets } from './cheatSheetData';
 
 function CheatSheets() {
   return (
     <Container className="my-5">
+      <SEO 
+        title="DSA Cheat Sheets" 
+        description="Comprehensive Data Structures and Algorithms Cheat Sheets. Time Complexity, Graph Templates, Sliding Window, and more."
+        url="/cheatsheets"
+      />
       <div className="text-center mb-5">
         <h1>📚 DSA Cheat Sheets</h1>
         <p className="lead text-muted">Essential templates, patterns, and complexity charts for quick revision.</p>

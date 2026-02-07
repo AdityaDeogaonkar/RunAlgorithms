@@ -1,11 +1,17 @@
 import React from 'react';
 import { Container, Card, Badge, Button, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import SEO from '../../components/SEO';
 import { potdList } from './potdData';
 
 function POTDList() {
   return (
     <Container className="my-5">
+      <SEO 
+        title="LeetCode Problem of the Day Archive"
+        description="Daily LeetCode challenges solved with detailed explanations and C++ code."
+        url="/potd"
+      />
       <div className="text-center mb-5">
         <h1>📅 POTD Archive</h1>
         <p className="lead text-muted">A collection of our daily LeetCode challenges.</p>

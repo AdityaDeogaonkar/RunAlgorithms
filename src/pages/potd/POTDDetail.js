@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Card, Badge, Button } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import SEO from '../../components/SEO';
 import { potdList } from './potdData';
 
 function POTDDetail() {
@@ -11,6 +12,7 @@ function POTDDetail() {
   if (!potd) {
     return (
       <Container className="my-5 text-center">
+        <SEO title="Problem Not Found" />
         <h2>Problem Not Found!</h2>
         <Button as={Link} to="/potd" variant="primary">Back to POTD List</Button>
       </Container>
@@ -19,6 +21,11 @@ function POTDDetail() {
 
   return (
     <Container className="my-5">
+      <SEO 
+        title={`${potd.title} - POTD Solution`}
+        description={`Detailed solution and explanation for LeetCode Problem: ${potd.title}. Difficulty: ${potd.difficulty}.`}
+        url={`/potd/${potd.id}`}
+      />
       <Button as={Link} to="/potd" variant="outline-secondary" className="mb-4">
         &larr; Back to List
       </Button>

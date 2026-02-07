@@ -2,11 +2,17 @@ import React from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import TopicCard from '../components/TopicCard';
+import SEO from '../components/SEO';
 import { topics } from '../data';
 
 function Home() {
   return (
     <Container className="my-5">
+      <SEO 
+        title="Home"
+        description="Master Data Structures, Algorithms, and System Design with curated problems, cheatsheets, and daily challenges."
+        url="/"
+      />
       <div className="text-center mb-5">
         <h1>Welcome to RunAlgorithms</h1>
         <p className="lead">Explore Data Structures and Algorithms with RunAlgorithms.</p>

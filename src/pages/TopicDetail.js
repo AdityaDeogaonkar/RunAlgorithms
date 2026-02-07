@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Container, Table, Badge, Button } from 'react-bootstrap';
+import SEO from '../components/SEO';
 import { topics } from '../data';
 
 function TopicDetail() {
@@ -10,23 +11,20 @@ function TopicDetail() {
   if (!topic) {
     return (
       <Container className="text-center my-5">
+        <SEO title="Topic Not Found" />
         <h2>Topic not found</h2>
         <Button as={Link} to="/" variant="primary">Go Home</Button>
       </Container>
     );
   }
 
-  const getDifficultyColor = (difficulty) => {
-    switch (difficulty.toLowerCase()) {
-      case 'easy': return 'success';
-      case 'medium': return 'warning';
-      case 'hard': return 'danger';
-      default: return 'secondary';
-    }
-  };
-
   return (
     <Container className="my-5">
+      <SEO 
+        title={`${topic.title} Problems`} 
+        description={`Master ${topic.title} with curated LeetCode problems, detailed solutions, and key insights.`}
+        url={`/topic/${topic.id}`}
+      />
       <div className="d-flex align-items-center justify-content-between mb-4">
         <h1>{topic.title}</h1>
         <Button as={Link} to="/" variant="outline-primary">Back to Topics</Button>
