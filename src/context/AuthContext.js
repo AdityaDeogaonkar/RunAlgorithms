@@ -11,32 +11,44 @@ export const AuthProvider = ({ children }) => {
   const [solvedQuestions, setSolvedQuestions] = useState([]);
 
   useEffect(() => {
-    // Check active session
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      const user = session?.user ?? null;
-      setCurrentUser(user);
-      if (user) {
-        await fetchUserProgress(user.id);
+    let mounted = true;
+
+    const initializeAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (mounted) {
+          const user = session?.user ?? null;
+          setCurrentUser(user);
+          if (user) {
+            await fetchUserProgress(user.id);
+          }
+        }
+      } catch (error) {
+        console.error("Auth initialization failed:", error);
+      } finally {
+        if (mounted) setLoading(false);
       }
-      setLoading(false);
     };
 
-    checkSession();
+    initializeAuth();
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      const user = session?.user ?? null;
-      setCurrentUser(user);
-      if (user) {
-        await fetchUserProgress(user.id);
-      } else {
-        setSolvedQuestions([]);
+      if (mounted) {
+        const user = session?.user ?? null;
+        setCurrentUser(user);
+        if (user) {
+          await fetchUserProgress(user.id);
+        } else {
+          setSolvedQuestions([]);
+        }
+        setLoading(false);
       }
-      setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const fetchUserProgress = async (userId) => {
