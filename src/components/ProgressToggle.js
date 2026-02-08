@@ -30,24 +30,32 @@ const ProgressToggle = ({ questionId }) => {
 
     try {
       if (newStatus) {
-        // Insert into user_progress table
+        // Use upsert to handle potential duplicates gracefully
         const { error } = await supabase
           .from('user_progress')
-          .insert([{ user_id: currentUser.id, question_id: questionId }]);
-        if (error) throw error;
+          .upsert([{ user_id: currentUser.id, question_id: questionId }], { onConflict: 'user_id, question_id' });
+        
+        if (error) {
+          console.error("Supabase Insert Error:", error);
+          throw error;
+        }
       } else {
-        // Delete from user_progress table
+        // Delete
         const { error } = await supabase
           .from('user_progress')
           .delete()
           .match({ user_id: currentUser.id, question_id: questionId });
-        if (error) throw error;
+          
+        if (error) {
+          console.error("Supabase Delete Error:", error);
+          throw error;
+        }
       }
     } catch (error) {
-      console.error("Failed to save progress", error.message);
+      console.error("Detailed Toggle Error:", error.message, error.details);
       // Revert if failed
       updateLocalProgress(questionId, !newStatus);
-      alert("Failed to save progress. Check your connection.");
+      alert(`Error saving progress: ${error.message}`);
     } finally {
       setLoading(false);
     }
