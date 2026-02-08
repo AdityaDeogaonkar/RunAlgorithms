@@ -32,6 +32,14 @@ export const AuthProvider = ({ children }) => {
 
     initializeAuth();
 
+    // Safety timeout: If Supabase hangs, force app to load after 3 seconds
+    const safetyTimeout = setTimeout(() => {
+        if (mounted && loading) {
+            console.warn("Auth initialization timed out - forcing render.");
+            setLoading(false);
+        }
+    }, 3000);
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (mounted) {
         const user = session?.user ?? null;
@@ -47,6 +55,7 @@ export const AuthProvider = ({ children }) => {
 
     return () => {
       mounted = false;
+      clearTimeout(safetyTimeout);
       subscription.unsubscribe();
     };
   }, []);
@@ -111,9 +120,46 @@ export const AuthProvider = ({ children }) => {
     updateLocalProgress
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {!loading && children}
-    </AuthContext.Provider>
-  );
-};
+    return (
+
+      <AuthContext.Provider value={value}>
+
+        {loading ? (
+
+          <div style={{ 
+
+            height: '100vh', 
+
+            display: 'flex', 
+
+            alignItems: 'center', 
+
+            justifyContent: 'center', 
+
+            background: '#020617', 
+
+            color: '#3b82f6',
+
+            flexDirection: 'column'
+
+          }}>
+
+            <div className="spinner-border" role="status" style={{ width: '3rem', height: '3rem' }}>
+
+              <span className="visually-hidden">Loading...</span>
+
+            </div>
+
+            <p style={{ marginTop: '20px', fontFamily: 'sans-serif' }}>Initializing...</p>
+
+          </div>
+
+        ) : children}
+
+      </AuthContext.Provider>
+
+    );
+
+  };
+
+  
