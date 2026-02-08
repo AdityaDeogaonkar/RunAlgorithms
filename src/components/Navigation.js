@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navbar, Container, Nav } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
-import { FaCode, FaFire, FaLayerGroup, FaBook, FaHome } from 'react-icons/fa';
+import { FaCode, FaFire, FaLayerGroup, FaBook, FaHome, FaBuilding } from 'react-icons/fa';
 
 function Navigation() {
   const location = useLocation();
