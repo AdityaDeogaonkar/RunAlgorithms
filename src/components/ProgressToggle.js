@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { toggleQuestionStatus } from '../firebase';
+import { supabase } from '../supabaseClient';
 import { FaCheckCircle, FaRegCircle } from 'react-icons/fa';
 import { Spinner } from 'react-bootstrap';
 
@@ -29,9 +29,22 @@ const ProgressToggle = ({ questionId }) => {
     updateLocalProgress(questionId, newStatus);
 
     try {
-      await toggleQuestionStatus(currentUser.uid, questionId, newStatus);
+      if (newStatus) {
+        // Insert into user_progress table
+        const { error } = await supabase
+          .from('user_progress')
+          .insert([{ user_id: currentUser.id, question_id: questionId }]);
+        if (error) throw error;
+      } else {
+        // Delete from user_progress table
+        const { error } = await supabase
+          .from('user_progress')
+          .delete()
+          .match({ user_id: currentUser.id, question_id: questionId });
+        if (error) throw error;
+      }
     } catch (error) {
-      console.error("Failed to save progress", error);
+      console.error("Failed to save progress", error.message);
       // Revert if failed
       updateLocalProgress(questionId, !newStatus);
       alert("Failed to save progress. Check your connection.");

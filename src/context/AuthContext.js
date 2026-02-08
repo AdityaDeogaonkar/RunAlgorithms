@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth, signInWithGoogle, logout, getUserProgress } from '../firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { supabase } from '../supabaseClient';
 
 const AuthContext = createContext();
 
@@ -11,31 +10,71 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [solvedQuestions, setSolvedQuestions] = useState([]);
 
-  // Listen for auth state changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    // Check active session
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      const user = session?.user ?? null;
       setCurrentUser(user);
       if (user) {
-        // Load user's solved questions
-        try {
-          const progress = await getUserProgress(user.uid);
-          setSolvedQuestions(progress);
-        } catch (error) {
-          console.error("Failed to load progress", error);
-        }
+        await fetchUserProgress(user.id);
+      }
+      setLoading(false);
+    };
+
+    checkSession();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      const user = session?.user ?? null;
+      setCurrentUser(user);
+      if (user) {
+        await fetchUserProgress(user.id);
       } else {
         setSolvedQuestions([]);
       }
       setLoading(false);
     });
 
-    return unsubscribe;
+    return () => subscription.unsubscribe();
   }, []);
 
-  // Update local state when user checks/unchecks a box
+  const fetchUserProgress = async (userId) => {
+    try {
+      const { data, error } = await supabase
+        .from('user_progress')
+        .select('question_id')
+        .eq('user_id', userId);
+
+      if (error) throw error;
+      setSolvedQuestions(data.map(item => item.question_id));
+    } catch (error) {
+      console.error("Failed to fetch progress", error.message);
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+      if (error) throw error;
+    } catch (error) {
+      console.error("Error signing in with Google", error.message);
+      throw error;
+    }
+  };
+
+  const logout = async () => {
+    await supabase.auth.signOut();
+  };
+
   const updateLocalProgress = (questionId, isSolved) => {
     if (isSolved) {
-      setSolvedQuestions(prev => [...prev, questionId]);
+      setSolvedQuestions(prev => [...new Set([...prev, questionId])]);
     } else {
       setSolvedQuestions(prev => prev.filter(id => id !== questionId));
     }

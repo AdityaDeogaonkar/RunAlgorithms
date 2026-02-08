@@ -35,15 +35,16 @@ function Navigation() {
 
             {currentUser ? (
               <Dropdown align="end">
-                <Dropdown.Toggle variant="transparent" className="d-flex align-items-center gap-2 text-light border-0 p-0">
-                  {currentUser.photoURL ? (
-                    <img src={currentUser.photoURL} alt="Profile" className="rounded-circle" width="32" height="32" />
+                <Dropdown.Toggle variant="transparent" className="d-flex align-items-center gap-2 text-light border-0 p-0 shadow-none">
+                  {currentUser.user_metadata?.avatar_url ? (
+                    <img src={currentUser.user_metadata.avatar_url} alt="Profile" className="rounded-circle border border-secondary" width="32" height="32" />
                   ) : (
                     <FaUserCircle size={28} />
                   )}
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="dropdown-menu-dark shadow-lg">
-                  <Dropdown.Header>{currentUser.displayName}</Dropdown.Header>
+                  <Dropdown.Header className="text-info">{currentUser.user_metadata?.full_name || currentUser.email}</Dropdown.Header>
+                  <Dropdown.Divider />
                   <Dropdown.Item onClick={logout}>Sign Out</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
