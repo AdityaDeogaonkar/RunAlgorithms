@@ -21,6 +21,9 @@ function Navigation() {
             <Nav.Link as={Link} to="/potd" className={`nav-link-magical ${location.pathname.includes('potd') ? 'active' : ''}`}>
               <FaFire className="me-1" /> Daily Challenge
             </Nav.Link>
+            <Nav.Link as={Link} to="/companies" className={`nav-link-magical ${location.pathname.includes('companies') ? 'active' : ''}`}>
+              <FaBuilding className="me-1" /> Companies
+            </Nav.Link>
             <Nav.Link as={Link} to="/system-design" className={`nav-link-magical ${location.pathname.includes('system') ? 'active' : ''}`}>
               <FaLayerGroup className="me-1" /> System Design
             </Nav.Link>
