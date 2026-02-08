@@ -1,10 +1,12 @@
 import React from 'react';
-import { Navbar, Container, Nav } from 'react-bootstrap';
+import { Navbar, Container, Nav, Button, Dropdown } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
-import { FaCode, FaFire, FaLayerGroup, FaBook, FaHome, FaBuilding } from 'react-icons/fa';
+import { FaCode, FaFire, FaLayerGroup, FaBook, FaHome, FaBuilding, FaGoogle, FaUserCircle } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
 
 function Navigation() {
   const location = useLocation();
+  const { currentUser, signInWithGoogle, logout } = useAuth();
 
   return (
     <Navbar expand="lg" variant="dark" fixed="top" className="navbar-magical">
@@ -14,7 +16,7 @@ function Navigation() {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ms-auto gap-3">
+          <Nav className="ms-auto gap-3 align-items-center">
             <Nav.Link as={Link} to="/" className={`nav-link-magical ${location.pathname === '/' ? 'active' : ''}`}>
               <FaHome className="me-1" /> Home
             </Nav.Link>
@@ -30,6 +32,32 @@ function Navigation() {
             <Nav.Link as={Link} to="/cheatsheets" className={`nav-link-magical ${location.pathname.includes('cheat') ? 'active' : ''}`}>
               <FaBook className="me-1" /> Cheat Sheets
             </Nav.Link>
+
+            {currentUser ? (
+              <Dropdown align="end">
+                <Dropdown.Toggle variant="transparent" className="d-flex align-items-center gap-2 text-light border-0 p-0">
+                  {currentUser.photoURL ? (
+                    <img src={currentUser.photoURL} alt="Profile" className="rounded-circle" width="32" height="32" />
+                  ) : (
+                    <FaUserCircle size={28} />
+                  )}
+                </Dropdown.Toggle>
+                <Dropdown.Menu className="dropdown-menu-dark shadow-lg">
+                  <Dropdown.Header>{currentUser.displayName}</Dropdown.Header>
+                  <Dropdown.Item onClick={logout}>Sign Out</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            ) : (
+              <Button 
+                onClick={signInWithGoogle} 
+                variant="outline-light" 
+                size="sm" 
+                className="d-flex align-items-center gap-2 rounded-pill px-3"
+                style={{ borderColor: 'rgba(255,255,255,0.2)' }}
+              >
+                <FaGoogle size={14} /> Sign In
+              </Button>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>

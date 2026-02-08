@@ -4,6 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import { companies } from './companyData';
 import SEO from '../../components/SEO';
 import { FaArrowLeft, FaExternalLinkAlt } from 'react-icons/fa';
+import ProgressToggle from '../../components/ProgressToggle';
 
 function CompanyDetail() {
   const { id } = useParams();
@@ -56,6 +57,7 @@ function CompanyDetail() {
           <Table hover responsive variant="dark" className="mb-0 align-middle">
             <thead className="bg-black text-white text-uppercase small letter-spacing-1">
               <tr>
+                <th className="p-4 border-bottom border-secondary">Status</th>
                 <th className="p-4 border-bottom border-secondary">#</th>
                 <th className="p-4 border-bottom border-secondary">Question</th>
                 <th className="p-4 border-bottom border-secondary">Difficulty</th>
@@ -65,6 +67,9 @@ function CompanyDetail() {
             <tbody>
               {company.questions.map((q, index) => (
                 <tr key={q.id}>
+                  <td className="p-4 border-bottom border-secondary text-center">
+                    <ProgressToggle questionId={`${company.id}-${q.id}`} />
+                  </td>
                   <td className="p-4 border-bottom border-secondary text-secondary">{index + 1}</td>
                   <td className="p-4 border-bottom border-secondary fw-bold text-light">
                     {q.title}

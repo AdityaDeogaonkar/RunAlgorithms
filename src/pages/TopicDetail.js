@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Container, Table, Badge, Button } from 'react-bootstrap';
 import SEO from '../components/SEO';
 import { topics } from '../data';
+import ProgressToggle from '../components/ProgressToggle';
 
 function TopicDetail() {
   const { id } = useParams();
@@ -43,6 +44,7 @@ function TopicDetail() {
       <Table hover responsive className="mt-4 shadow-sm">
         <thead className="bg-light">
           <tr>
+            <th>Status</th>
             <th>#</th>
             <th>Problem</th>
             <th>Difficulty</th>
@@ -53,6 +55,9 @@ function TopicDetail() {
         <tbody>
           {topic.questions.map((q, index) => (
             <tr key={q.id}>
+              <td className="text-center align-middle">
+                <ProgressToggle questionId={`${topic.id}-${q.id}`} />
+              </td>
               <td>{index + 1}</td>
               <td>{q.title}</td>
               <td>
