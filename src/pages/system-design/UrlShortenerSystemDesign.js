@@ -1,438 +1,1185 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
-import { 
-  Server, Database, Globe, Lock, Clock, Zap, 
-  ChevronDown, ChevronRight, Copy, Check, Hash, 
-  Layers, Cpu, ArrowRight, BookOpen, AlertCircle
-} from 'lucide-react';
+import { ChevronDown, ChevronRight, Copy, Check, Info, Zap, Database, Server, Globe, Lock, TrendingUp, Clock, Code, BookOpen, Lightbulb, AlertCircle } from 'lucide-react';
 
-// --- Design System Constants ---
-const THEME = {
-  bg: "bg-[#0a0a0a]", // Deepest void
-  bgSec: "bg-[#111111]", // Slightly lighter void
-  text: "text-[#e5e5e5]",
-  textDim: "text-[#a3a3a3]",
-  accent: "text-[#3b82f6]", // Electric Blue
-  accentBg: "bg-[#3b82f6]",
-  success: "text-[#10b981]",
-  warning: "text-[#f59e0b]",
-  border: "border-[#262626]",
-  codeBg: "bg-[#171717]",
-  fontHeading: "font-serif", // Placeholder for actual serif font class
-  fontMono: "font-mono", // Placeholder for mono font class
-};
+const UrlShortenerSystemDesign = () => {
+  const [activeSection, setActiveSection] = useState('overview');
+  const [expandedSections, setExpandedSections] = useState({});
+  const [copiedCode, setCopiedCode] = useState('');
+  const [readingProgress, setReadingProgress] = useState(0);
+  const contentRef = useRef(null);
 
-// --- Helper Components ---
+  // Track reading progress
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!contentRef.current) return;
+      const element = contentRef.current;
+      const totalHeight = element.scrollHeight - element.clientHeight;
+      const progress = (element.scrollTop / totalHeight) * 100;
+      setReadingProgress(Math.min(progress, 100));
+    };
 
-const SectionHeading = ({ children, id }) => (
-  <motion.h2 
-    id={id}
-    initial={{ opacity: 0, x: -20 }}
-    whileInView={{ opacity: 1, x: 0 }}
-    viewport={{ once: true }}
-    className={`text-3xl md:text-4xl font-bold mt-16 mb-8 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 scroll-mt-24`}
-  >
-    {children}
-  </motion.h2>
-);
+    const element = contentRef.current;
+    if (element) {
+      element.addEventListener('scroll', handleScroll);
+      return () => element.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
 
-const CodeBlock = ({ code, language = "json" }) => {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
   };
 
-  return (
-    <div className="relative group rounded-lg overflow-hidden my-6 border border-[#333] shadow-2xl">
-      <div className="flex justify-between items-center px-4 py-2 bg-[#1a1a1a] border-b border-[#333]">
-        <span className="text-xs uppercase tracking-wider text-gray-500 font-mono">{language}</span>
-        <button 
-          onClick={handleCopy}
-          className="text-gray-400 hover:text-white transition-colors"
+  const copyToClipboard = (text, id) => {
+    navigator.clipboard.writeText(text);
+    setCopiedCode(id);
+    setTimeout(() => setCopiedCode(''), 2000);
+  };
+
+  const CodeBlock = ({ code, language, id }) => (
+    <div className="relative group my-6 rounded-lg overflow-hidden border border-slate-700/50 bg-slate-900/50 backdrop-blur-sm">
+      <div className="flex items-center justify-between px-4 py-2 bg-slate-800/80 border-b border-slate-700/50">
+        <span className="text-xs font-mono text-slate-400 uppercase tracking-wider">{language}</span>
+        <button
+          onClick={() => copyToClipboard(code, id)}
+          className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-slate-300 hover:text-emerald-400 transition-colors rounded-md hover:bg-slate-700/50"
         >
-          {copied ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
+          {copiedCode === id ? (
+            <>
+              <Check className="w-3.5 h-3.5" />
+              <span>Copied!</span>
+            </>
+          ) : (
+            <>
+              <Copy className="w-3.5 h-3.5" />
+              <span>Copy</span>
+            </>
+          )}
         </button>
       </div>
-      <pre className="p-4 overflow-x-auto bg-[#0f0f0f] text-sm font-mono leading-relaxed">
-        <code className="text-gray-300">{code}</code>
+      <pre className="p-4 overflow-x-auto text-sm">
+        <code className="text-slate-200 font-mono leading-relaxed">{code}</code>
       </pre>
     </div>
   );
-};
 
-const InfoCard = ({ icon: Icon, title, children }) => (
-  <div className="p-6 rounded-xl bg-[#111] border border-[#262626] hover:border-gray-600 transition-colors duration-300 group">
-    <div className="flex items-start gap-4">
-      <div className="p-3 rounded-lg bg-[#1a1a1a] group-hover:bg-[#252525] transition-colors">
-        <Icon size={24} className="text-blue-400" />
+  const CollapsibleSection = ({ title, children, id, icon: Icon, defaultOpen = false }) => {
+    const isExpanded = expandedSections[id] ?? defaultOpen;
+    
+    return (
+      <div className="my-8 border border-slate-700/30 rounded-xl overflow-hidden bg-gradient-to-br from-slate-800/20 to-slate-900/20 backdrop-blur-sm">
+        <button
+          onClick={() => toggleSection(id)}
+          className="w-full px-6 py-4 flex items-center justify-between hover:bg-slate-800/30 transition-all group"
+        >
+          <div className="flex items-center gap-3">
+            {Icon && <Icon className="w-5 h-5 text-emerald-400" />}
+            <h3 className="text-lg font-semibold text-slate-100 group-hover:text-emerald-400 transition-colors">
+              {title}
+            </h3>
+          </div>
+          {isExpanded ? (
+            <ChevronDown className="w-5 h-5 text-slate-400 transition-transform" />
+          ) : (
+            <ChevronRight className="w-5 h-5 text-slate-400 transition-transform" />
+          )}
+        </button>
+        {isExpanded && (
+          <div className="px-6 py-4 border-t border-slate-700/30 animate-slideDown">
+            {children}
+          </div>
+        )}
       </div>
-      <div>
-        <h3 className="text-lg font-semibold mb-2 text-gray-100">{title}</h3>
-        <div className="text-gray-400 text-sm leading-relaxed">{children}</div>
-      </div>
-    </div>
-  </div>
-);
-
-// --- Content Sections ---
-
-const ArchitectureDiagram = () => {
-  return (
-    <div className="my-12 p-8 bg-[#111] border border-[#262626] rounded-xl overflow-hidden relative">
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
-      <div className="relative z-10 flex flex-col items-center gap-8">
-        {/* Client */}
-        <div className="flex flex-col items-center">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-[0_0_30px_rgba(59,130,246,0.3)]">
-            <Globe className="text-white" size={32} />
-          </div>
-          <span className="mt-2 text-sm font-mono text-gray-400">Client</span>
-        </div>
-
-        {/* Load Balancer */}
-        <div className="h-12 w-0.5 bg-gradient-to-b from-gray-700 to-gray-700"></div>
-        <div className="px-6 py-3 rounded-lg border border-blue-500/30 bg-blue-500/10 text-blue-400 font-mono text-sm">
-          Load Balancer
-        </div>
-        <div className="h-12 w-0.5 bg-gray-700"></div>
-
-        {/* Services */}
-        <div className="flex gap-4 md:gap-12 flex-wrap justify-center">
-          <div className="flex flex-col items-center p-4 border border-[#333] bg-[#1a1a1a] rounded-lg w-40">
-            <Server className="mb-2 text-purple-400" />
-            <span className="font-semibold text-sm">App Service</span>
-            <span className="text-xs text-gray-500 mt-1">Shorten/Redirect</span>
-          </div>
-          <div className="flex flex-col items-center p-4 border border-[#333] bg-[#1a1a1a] rounded-lg w-40">
-            <Hash className="mb-2 text-green-400" />
-            <span className="font-semibold text-sm">KGS</span>
-            <span className="text-xs text-gray-500 mt-1">Key Generation</span>
-          </div>
-        </div>
-
-        {/* Data Layer */}
-        <div className="flex w-full justify-center gap-12 mt-4">
-          <div className="h-12 w-0.5 bg-gray-700"></div>
-          <div className="h-12 w-0.5 bg-gray-700"></div>
-        </div>
-
-        <div className="flex gap-4 md:gap-12 flex-wrap justify-center">
-          <div className="flex flex-col items-center p-4 border border-orange-500/20 bg-orange-500/5 rounded-lg w-40">
-            <Zap className="mb-2 text-orange-400" />
-            <span className="font-semibold text-sm">Cache</span>
-            <span className="text-xs text-gray-500 mt-1">Redis Cluster</span>
-          </div>
-          <div className="flex flex-col items-center p-4 border border-blue-500/20 bg-blue-500/5 rounded-lg w-40">
-            <Database className="mb-2 text-blue-400" />
-            <span className="font-semibold text-sm">Database</span>
-            <span className="text-xs text-gray-500 mt-1">NoSQL (Cassandra)</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const QuizComponent = () => {
-  const [selected, setSelected] = useState(null);
-  const [showResult, setShowResult] = useState(false);
-
-  const question = {
-    text: "Why is a NoSQL database generally preferred over SQL for a URL shortener?",
-    options: [
-      { id: 0, text: "It supports complex joins between tables." },
-      { id: 1, text: "It provides easier horizontal scaling and faster lookups for key-value data." },
-      { id: 2, text: "It guarantees strict ACID compliance for every transaction." },
-      { id: 3, text: "It uses less disk space automatically." }
-    ],
-    correct: 1
+    );
   };
 
-  return (
-    <div className="mt-12 p-8 bg-[#111] border border-[#262626] rounded-xl">
-      <div className="flex items-center gap-3 mb-6">
-        <BookOpen className="text-purple-400" />
-        <h3 className="text-xl font-bold">Concept Check</h3>
+  const InfoBox = ({ type = 'info', title, children }) => {
+    const styles = {
+      info: 'border-blue-500/30 bg-blue-500/5',
+      tip: 'border-emerald-500/30 bg-emerald-500/5',
+      warning: 'border-amber-500/30 bg-amber-500/5',
+      key: 'border-purple-500/30 bg-purple-500/5'
+    };
+
+    const icons = {
+      info: Info,
+      tip: Lightbulb,
+      warning: AlertCircle,
+      key: Lock
+    };
+
+    const Icon = icons[type];
+
+    return (
+      <div className={`my-6 p-4 rounded-lg border ${styles[type]} backdrop-blur-sm`}>
+        <div className="flex gap-3">
+          <Icon className="w-5 h-5 mt-0.5 flex-shrink-0 text-slate-300" />
+          <div className="flex-1">
+            {title && <h4 className="font-semibold text-slate-200 mb-2">{title}</h4>}
+            <div className="text-slate-300 text-sm leading-relaxed">{children}</div>
+          </div>
+        </div>
       </div>
-      <p className="text-lg mb-6">{question.text}</p>
-      <div className="space-y-3">
-        {question.options.map((opt) => (
+    );
+  };
+
+  const TableOfContents = () => {
+    const sections = [
+      { id: 'overview', label: 'Overview', icon: BookOpen },
+      { id: 'requirements', label: 'Requirements', icon: Code },
+      { id: 'capacity', label: 'Capacity Planning', icon: TrendingUp },
+      { id: 'architecture', label: 'Architecture', icon: Globe },
+      { id: 'database', label: 'Database Design', icon: Database },
+      { id: 'api', label: 'API Design', icon: Server },
+      { id: 'scaling', label: 'Scaling Strategy', icon: Zap },
+      { id: 'tradeoffs', label: 'Trade-offs', icon: AlertCircle }
+    ];
+
+    return (
+      <div className="sticky top-6 space-y-2">
+        <div className="mb-4">
+          <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
+            Reading Progress
+          </div>
+          <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 transition-all duration-300 rounded-full"
+              style={{ width: `${readingProgress}%` }}
+            />
+          </div>
+        </div>
+        <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
+          On This Page
+        </div>
+        {sections.map(({ id, label, icon: Icon }) => (
           <button
-            key={opt.id}
-            onClick={() => { setSelected(opt.id); setShowResult(true); }}
-            className={`w-full text-left p-4 rounded-lg border transition-all duration-200 ${
-              showResult 
-                ? opt.id === question.correct 
-                  ? "bg-green-500/10 border-green-500/50 text-green-400" 
-                  : opt.id === selected 
-                    ? "bg-red-500/10 border-red-500/50 text-red-400" 
-                    : "bg-[#1a1a1a] border-[#333] opacity-50"
-                : "bg-[#1a1a1a] border-[#333] hover:border-gray-500 hover:bg-[#222]"
+            key={id}
+            onClick={() => {
+              setActiveSection(id);
+              document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className={`w-full text-left px-3 py-2 rounded-lg transition-all flex items-center gap-2.5 group ${
+              activeSection === id
+                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
             }`}
           >
-            {opt.text}
+            <Icon className="w-4 h-4 flex-shrink-0" />
+            <span className="text-sm font-medium">{label}</span>
           </button>
         ))}
       </div>
-      {showResult && (
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-6 p-4 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 text-sm"
-        >
-          <strong>Explanation:</strong> Correct! URL shorteners are read-heavy systems requiring massive scale. The data model is simple (Key-Value), and relationships (Joins) are rarely needed. NoSQL databases like Cassandra or DynamoDB scale horizontally much easier than relational DBs.
-        </motion.div>
-      )}
+    );
+  };
+
+  const ArchitectureDiagram = () => (
+    <div className="my-8 p-8 bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl border border-slate-700/50 overflow-x-auto">
+      <svg viewBox="0 0 800 500" className="w-full h-auto">
+        {/* Client */}
+        <g transform="translate(50, 50)">
+          <rect width="120" height="80" rx="8" fill="#0f172a" stroke="#10b981" strokeWidth="2"/>
+          <text x="60" y="35" textAnchor="middle" fill="#e2e8f0" fontSize="14" fontWeight="600">Client</text>
+          <text x="60" y="55" textAnchor="middle" fill="#94a3b8" fontSize="11">Browser/App</text>
+        </g>
+
+        {/* Load Balancer */}
+        <g transform="translate(280, 50)">
+          <rect width="140" height="80" rx="8" fill="#0f172a" stroke="#3b82f6" strokeWidth="2"/>
+          <text x="70" y="35" textAnchor="middle" fill="#e2e8f0" fontSize="14" fontWeight="600">Load Balancer</text>
+          <text x="70" y="55" textAnchor="middle" fill="#94a3b8" fontSize="11">NGINX/ALB</text>
+        </g>
+
+        {/* App Servers */}
+        <g transform="translate(260, 180)">
+          <rect width="80" height="70" rx="8" fill="#0f172a" stroke="#8b5cf6" strokeWidth="2"/>
+          <text x="40" y="30" textAnchor="middle" fill="#e2e8f0" fontSize="12" fontWeight="600">API</text>
+          <text x="40" y="48" textAnchor="middle" fill="#94a3b8" fontSize="10">Server 1</text>
+        </g>
+        <g transform="translate(360, 180)">
+          <rect width="80" height="70" rx="8" fill="#0f172a" stroke="#8b5cf6" strokeWidth="2"/>
+          <text x="40" y="30" textAnchor="middle" fill="#e2e8f0" fontSize="12" fontWeight="600">API</text>
+          <text x="40" y="48" textAnchor="middle" fill="#94a3b8" fontSize="10">Server 2</text>
+        </g>
+
+        {/* Cache */}
+        <g transform="translate(520, 50)">
+          <rect width="120" height="80" rx="8" fill="#0f172a" stroke="#f59e0b" strokeWidth="2"/>
+          <text x="60" y="35" textAnchor="middle" fill="#e2e8f0" fontSize="14" fontWeight="600">Redis</text>
+          <text x="60" y="55" textAnchor="middle" fill="#94a3b8" fontSize="11">Cache Layer</text>
+        </g>
+
+        {/* Database */}
+        <g transform="translate(520, 180)">
+          <rect width="120" height="70" rx="8" fill="#0f172a" stroke="#ec4899" strokeWidth="2"/>
+          <text x="60" y="30" textAnchor="middle" fill="#e2e8f0" fontSize="14" fontWeight="600">PostgreSQL</text>
+          <text x="60" y="48" textAnchor="middle" fill="#94a3b8" fontSize="11">Primary DB</text>
+        </g>
+
+        {/* Replica */}
+        <g transform="translate(520, 280)">
+          <rect width="120" height="70" rx="8" fill="#0f172a" stroke="#ec4899" strokeWidth="2" strokeDasharray="4"/>
+          <text x="60" y="30" textAnchor="middle" fill="#e2e8f0" fontSize="14" fontWeight="600">PostgreSQL</text>
+          <text x="60" y="48" textAnchor="middle" fill="#94a3b8" fontSize="11">Read Replica</text>
+        </g>
+
+        {/* Analytics */}
+        <g transform="translate(520, 380)">
+          <rect width="120" height="70" rx="8" fill="#0f172a" stroke="#06b6d4" strokeWidth="2"/>
+          <text x="60" y="30" textAnchor="middle" fill="#e2e8f0" fontSize="14" fontWeight="600">Analytics</text>
+          <text x="60" y="48" textAnchor="middle" fill="#94a3b8" fontSize="11">Clickstream</text>
+        </g>
+
+        {/* Arrows */}
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#10b981" />
+          </marker>
+        </defs>
+        
+        <line x1="170" y1="90" x2="280" y2="90" stroke="#10b981" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+        <line x1="420" y1="90" x2="520" y2="90" stroke="#10b981" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+        <line x1="350" y1="130" x2="320" y2="180" stroke="#10b981" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+        <line x1="350" y1="130" x2="380" y2="180" stroke="#10b981" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+        <line x1="440" y1="215" x2="520" y2="215" stroke="#10b981" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+        <line x1="580" y1="250" x2="580" y2="280" stroke="#10b981" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+        <line x1="440" y1="230" x2="520" y2="415" stroke="#10b981" strokeWidth="2" strokeDasharray="4" markerEnd="url(#arrowhead)"/>
+      </svg>
+      <div className="mt-6 text-center text-sm text-slate-400">
+        High-level system architecture for URL shortener service
+      </div>
     </div>
   );
-};
 
-// --- Main Page Component ---
+  const DatabaseSchema = () => (
+    <div className="my-6 overflow-x-auto">
+      <div className="inline-block min-w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* URLs Table */}
+          <div className="border border-slate-700/50 rounded-lg overflow-hidden bg-slate-900/30">
+            <div className="bg-slate-800/80 px-4 py-3 border-b border-slate-700/50">
+              <h4 className="font-semibold text-slate-100 flex items-center gap-2">
+                <Database className="w-4 h-4 text-purple-400" />
+                urls
+              </h4>
+            </div>
+            <table className="w-full text-sm">
+              <thead className="bg-slate-800/50">
+                <tr>
+                  <th className="px-4 py-2 text-left text-slate-400 font-medium">Column</th>
+                  <th className="px-4 py-2 text-left text-slate-400 font-medium">Type</th>
+                  <th className="px-4 py-2 text-left text-slate-400 font-medium">Notes</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-700/30">
+                <tr className="hover:bg-slate-800/20">
+                  <td className="px-4 py-2 font-mono text-emerald-400">id</td>
+                  <td className="px-4 py-2 text-slate-300">BIGINT</td>
+                  <td className="px-4 py-2 text-slate-400">PK, Auto</td>
+                </tr>
+                <tr className="hover:bg-slate-800/20">
+                  <td className="px-4 py-2 font-mono text-emerald-400">short_code</td>
+                  <td className="px-4 py-2 text-slate-300">VARCHAR(10)</td>
+                  <td className="px-4 py-2 text-slate-400">Unique, Indexed</td>
+                </tr>
+                <tr className="hover:bg-slate-800/20">
+                  <td className="px-4 py-2 font-mono text-emerald-400">original_url</td>
+                  <td className="px-4 py-2 text-slate-300">TEXT</td>
+                  <td className="px-4 py-2 text-slate-400">Required</td>
+                </tr>
+                <tr className="hover:bg-slate-800/20">
+                  <td className="px-4 py-2 font-mono text-emerald-400">user_id</td>
+                  <td className="px-4 py-2 text-slate-300">BIGINT</td>
+                  <td className="px-4 py-2 text-slate-400">FK, Nullable</td>
+                </tr>
+                <tr className="hover:bg-slate-800/20">
+                  <td className="px-4 py-2 font-mono text-emerald-400">created_at</td>
+                  <td className="px-4 py-2 text-slate-300">TIMESTAMP</td>
+                  <td className="px-4 py-2 text-slate-400">Default NOW()</td>
+                </tr>
+                <tr className="hover:bg-slate-800/20">
+                  <td className="px-4 py-2 font-mono text-emerald-400">expires_at</td>
+                  <td className="px-4 py-2 text-slate-300">TIMESTAMP</td>
+                  <td className="px-4 py-2 text-slate-400">Nullable</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-const UrlShortenerSystemDesign = () => {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
-  });
-
-  const sections = [
-    { id: "requirements", title: "Requirements" },
-    { id: "capacity", title: "Capacity Estimation" },
-    { id: "architecture", title: "High-Level Design" },
-    { id: "encoding", title: "Core Logic: Encoding" },
-    { id: "database", title: "Data Model" },
-    { id: "scaling", title: "Scaling & Trade-offs" }
-  ];
+          {/* Analytics Table */}
+          <div className="border border-slate-700/50 rounded-lg overflow-hidden bg-slate-900/30">
+            <div className="bg-slate-800/80 px-4 py-3 border-b border-slate-700/50">
+              <h4 className="font-semibold text-slate-100 flex items-center gap-2">
+                <Database className="w-4 h-4 text-cyan-400" />
+                url_clicks
+              </h4>
+            </div>
+            <table className="w-full text-sm">
+              <thead className="bg-slate-800/50">
+                <tr>
+                  <th className="px-4 py-2 text-left text-slate-400 font-medium">Column</th>
+                  <th className="px-4 py-2 text-left text-slate-400 font-medium">Type</th>
+                  <th className="px-4 py-2 text-left text-slate-400 font-medium">Notes</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-700/30">
+                <tr className="hover:bg-slate-800/20">
+                  <td className="px-4 py-2 font-mono text-emerald-400">id</td>
+                  <td className="px-4 py-2 text-slate-300">BIGINT</td>
+                  <td className="px-4 py-2 text-slate-400">PK, Auto</td>
+                </tr>
+                <tr className="hover:bg-slate-800/20">
+                  <td className="px-4 py-2 font-mono text-emerald-400">url_id</td>
+                  <td className="px-4 py-2 text-slate-300">BIGINT</td>
+                  <td className="px-4 py-2 text-slate-400">FK</td>
+                </tr>
+                <tr className="hover:bg-slate-800/20">
+                  <td className="px-4 py-2 font-mono text-emerald-400">clicked_at</td>
+                  <td className="px-4 py-2 text-slate-300">TIMESTAMP</td>
+                  <td className="px-4 py-2 text-slate-400">Indexed</td>
+                </tr>
+                <tr className="hover:bg-slate-800/20">
+                  <td className="px-4 py-2 font-mono text-emerald-400">ip_address</td>
+                  <td className="px-4 py-2 text-slate-300">INET</td>
+                  <td className="px-4 py-2 text-slate-400">-</td>
+                </tr>
+                <tr className="hover:bg-slate-800/20">
+                  <td className="px-4 py-2 font-mono text-emerald-400">user_agent</td>
+                  <td className="px-4 py-2 text-slate-300">TEXT</td>
+                  <td className="px-4 py-2 text-slate-400">-</td>
+                </tr>
+                <tr className="hover:bg-slate-800/20">
+                  <td className="px-4 py-2 font-mono text-emerald-400">referrer</td>
+                  <td className="px-4 py-2 text-slate-300">TEXT</td>
+                  <td className="px-4 py-2 text-slate-400">Nullable</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
-    <div className={`min-h-screen ${THEME.bg} ${THEME.text} font-sans selection:bg-blue-500/30`}>
-      {/* Progress Bar */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 z-50 origin-left"
-        style={{ scaleX }}
-      />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 pt-20 pb-32">
-        
-        {/* Sidebar Navigation (Desktop) */}
-        <aside className="hidden lg:block lg:col-span-3 relative">
-          <div className="sticky top-32 space-y-1">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-6 pl-4">Contents</h4>
-            {sections.map((section) => (
-              <a 
-                key={section.id} 
-                href={`#${section.id}`}
-                className="block pl-4 py-2 text-sm text-gray-400 hover:text-white hover:border-l-2 border-blue-500 transition-all duration-200 border-l-2 border-transparent"
-              >
-                {section.title}
-              </a>
-            ))}
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100">
+      {/* Noise texture overlay */}
+      <div className="fixed inset-0 opacity-[0.015] pointer-events-none" 
+           style={{backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' /%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\' /%3E%3C/svg%3E")'}} />
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header */}
+        <header className="mb-16 relative">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
+              <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wider">System Design</span>
+            </div>
+            <div className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full">
+              <span className="text-xs font-semibold text-blue-400 uppercase tracking-wider">Intermediate</span>
+            </div>
           </div>
-        </aside>
-
-        {/* Main Content */}
-        <main className="col-span-1 lg:col-span-9">
           
-          {/* Hero Section */}
-          <header className="mb-20 relative">
-            <div className="absolute -top-20 -left-20 w-64 h-64 bg-blue-500/20 rounded-full blur-[100px]"></div>
-            <div className="absolute top-20 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-[100px]"></div>
-            
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-xs font-medium mb-6">
-              <Cpu size={14} /> System Design Series
-            </div>
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400">
-              Design a URL Shortener
-            </h1>
-            <p className="text-xl text-gray-400 max-w-2xl leading-relaxed">
-              Explore the architecture behind scalable link management systems like Bit.ly. 
-              From capacity planning to collision-free hashing algorithms.
-            </p>
-          </header>
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-slate-100 via-slate-200 to-slate-400 bg-clip-text text-transparent leading-tight">
+            Design a URL Shortener
+          </h1>
+          
+          <p className="text-xl text-slate-400 max-w-3xl leading-relaxed mb-8">
+            Learn how to design a scalable URL shortening service like Bit.ly or TinyURL. 
+            This comprehensive guide covers architecture, database design, API endpoints, and scaling strategies.
+          </p>
 
-          {/* 1. Requirements */}
-          <section>
-            <SectionHeading id="requirements">Requirements Gathering</SectionHeading>
-            <div className="grid md:grid-cols-2 gap-6">
-              <InfoCard icon={Check} title="Functional">
-                <ul className="space-y-2 list-disc list-inside marker:text-blue-500">
-                  <li>Given a long URL, return a unique short URL.</li>
-                  <li>Clicking the short URL redirects to the original.</li>
-                  <li>Users can optionally pick a custom alias.</li>
-                  <li>Links expire after a default timespan.</li>
-                </ul>
-              </InfoCard>
-              <InfoCard icon={Lock} title="Non-Functional">
-                <ul className="space-y-2 list-disc list-inside marker:text-purple-500">
-                  <li><strong>High Availability:</strong> System must not go down.</li>
-                  <li><strong>Low Latency:</strong> Redirection must happen in milliseconds.</li>
-                  <li><strong>Read-Heavy:</strong> 100:1 Read/Write ratio.</li>
-                </ul>
-              </InfoCard>
+          <div className="flex flex-wrap gap-6 text-sm text-slate-400">
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4" />
+              <span>25 min read</span>
             </div>
-          </section>
+            <div className="flex items-center gap-2">
+              <BookOpen className="w-4 h-4" />
+              <span>7 key sections</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4" />
+              <span>12,847 learners</span>
+            </div>
+          </div>
+        </header>
 
-          {/* 2. Capacity Estimation */}
-          <section>
-            <SectionHeading id="capacity">Capacity Estimation (Back-of-Envelope)</SectionHeading>
-            <div className="bg-[#111] border border-[#262626] rounded-xl p-6 md:p-8 font-mono text-sm md:text-base">
-              <div className="grid gap-6">
-                <div className="border-b border-[#262626] pb-4">
-                  <div className="text-gray-500 mb-1">Traffic Estimates</div>
-                  <div className="flex justify-between items-center">
-                    <span>Write QPS</span>
-                    <span className="text-blue-400">1,160 / sec</span>
-                  </div>
-                  <div className="text-xs text-gray-600 mt-1">100M new URLs/month / (30 * 24 * 3600)</div>
-                  
-                  <div className="flex justify-between items-center mt-3">
-                    <span>Read QPS (100:1 ratio)</span>
-                    <span className="text-purple-400">116,000 / sec</span>
-                  </div>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Table of Contents - Sidebar */}
+          <aside className="lg:col-span-1 hidden lg:block">
+            <TableOfContents />
+          </aside>
+
+          {/* Main Content */}
+          <main 
+            ref={contentRef}
+            className="lg:col-span-3 space-y-12 max-h-[calc(100vh-8rem)] overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-900"
+          >
+            {/* Overview */}
+            <section id="overview">
+              <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+                <BookOpen className="w-8 h-8 text-emerald-400" />
+                Overview
+              </h2>
+              <div className="prose prose-invert prose-slate max-w-none">
+                <p className="text-slate-300 leading-relaxed text-lg mb-4">
+                  A URL shortener is a service that creates short aliases for long URLs. When users visit the short URL, 
+                  they are redirected to the original long URL. This is commonly used in social media, marketing campaigns, 
+                  and anywhere character count matters.
+                </p>
+                
+                <InfoBox type="key" title="Key Learning Objectives">
+                  <ul className="space-y-2 ml-4 list-disc">
+                    <li>Design a system that handles billions of URLs with low latency</li>
+                    <li>Implement efficient URL encoding/decoding algorithms</li>
+                    <li>Build scalable storage and caching strategies</li>
+                    <li>Handle analytics and click tracking at scale</li>
+                  </ul>
+                </InfoBox>
+
+                <h3 className="text-2xl font-semibold mt-8 mb-4 text-slate-200">Real-World Examples</h3>
+                <ul className="space-y-2 text-slate-300">
+                  <li><strong className="text-emerald-400">Bit.ly:</strong> 600M+ links created monthly, handling billions of redirects</li>
+                  <li><strong className="text-emerald-400">TinyURL:</strong> One of the first URL shorteners, simple and reliable</li>
+                  <li><strong className="text-emerald-400">Rebrandly:</strong> Custom branded short links for marketing</li>
+                </ul>
+              </div>
+            </section>
+
+            {/* Requirements */}
+            <section id="requirements">
+              <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+                <Code className="w-8 h-8 text-blue-400" />
+                Requirements Gathering
+              </h2>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="p-6 bg-slate-800/30 border border-slate-700/50 rounded-xl backdrop-blur-sm">
+                  <h3 className="text-lg font-semibold mb-4 text-emerald-400 flex items-center gap-2">
+                    <Check className="w-5 h-5" />
+                    Functional Requirements
+                  </h3>
+                  <ul className="space-y-3 text-slate-300">
+                    <li className="flex items-start gap-2">
+                      <span className="text-emerald-400 mt-1">•</span>
+                      <span>Generate a unique short URL for a given long URL</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-emerald-400 mt-1">•</span>
+                      <span>Redirect users from short URL to original URL</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-emerald-400 mt-1">•</span>
+                      <span>Support custom short URLs (optional)</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-emerald-400 mt-1">•</span>
+                      <span>Provide analytics (clicks, geography, referrers)</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-emerald-400 mt-1">•</span>
+                      <span>Support URL expiration</span>
+                    </li>
+                  </ul>
                 </div>
 
-                <div>
-                  <div className="text-gray-500 mb-1">Storage Estimates (5 Years)</div>
-                  <div className="flex justify-between items-center">
-                    <span>Total Records</span>
-                    <span className="text-gray-300">6 Billion</span>
-                  </div>
-                  <div className="flex justify-between items-center mt-2">
-                    <span>Storage Size</span>
-                    <span className="text-green-400">3 TB</span>
-                  </div>
-                  <div className="text-xs text-gray-600 mt-1">6B records * 500 bytes/record</div>
+                <div className="p-6 bg-slate-800/30 border border-slate-700/50 rounded-xl backdrop-blur-sm">
+                  <h3 className="text-lg font-semibold mb-4 text-purple-400 flex items-center gap-2">
+                    <Zap className="w-5 h-5" />
+                    Non-Functional Requirements
+                  </h3>
+                  <ul className="space-y-3 text-slate-300">
+                    <li className="flex items-start gap-2">
+                      <span className="text-purple-400 mt-1">•</span>
+                      <span><strong>High availability:</strong> 99.99% uptime</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-purple-400 mt-1">•</span>
+                      <span><strong>Low latency:</strong> Redirects under 100ms</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-purple-400 mt-1">•</span>
+                      <span><strong>Scalability:</strong> Handle billions of URLs</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-purple-400 mt-1">•</span>
+                      <span><strong>Durability:</strong> URLs should not be lost</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-purple-400 mt-1">•</span>
+                      <span><strong>Security:</strong> Prevent URL abuse</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
 
-          {/* 3. Architecture */}
-          <section>
-            <SectionHeading id="architecture">High-Level Architecture</SectionHeading>
-            <p className="text-gray-400 mb-6 leading-relaxed">
-              We separate the system into distinct microservices. The <strong className="text-white">App Service</strong> handles the logic, 
-              while the <strong className="text-white">KGS (Key Generation Service)</strong> pre-generates unique tokens to ensure instant writes without collision checks.
-            </p>
-            <ArchitectureDiagram />
-          </section>
+            {/* Capacity Estimation */}
+            <section id="capacity">
+              <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+                <TrendingUp className="w-8 h-8 text-amber-400" />
+                Capacity Estimation
+              </h2>
 
-          {/* 4. Deep Dive: Encoding */}
-          <section>
-            <SectionHeading id="encoding">Core Logic: Base62 Encoding</SectionHeading>
-            <p className="text-gray-400 mb-6">
-              Why Base62? It uses characters <code className="bg-[#1a1a1a] px-1 rounded text-blue-300">[A-Z, a-z, 0-9]</code>. 
-              A 7-character string gives us <strong>62⁷ ≈ 3.5 Trillion</strong> combinations, which is sufficient for decades.
-            </p>
-            
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              <div>
-                <h4 className="text-lg font-bold mb-4 flex items-center gap-2">
-                  <Hash size={20} className="text-blue-500" /> 
-                  The Algorithm
-                </h4>
-                <ol className="space-y-4 text-gray-400 list-decimal list-inside">
-                  <li>Take a unique numeric ID (from DB or distributed counter).</li>
-                  <li>Map the number to Base62 characters recursively.</li>
-                  <li>Reverse the result string.</li>
-                </ol>
+              <InfoBox type="info" title="Traffic Assumptions">
+                Let's assume our service has Bit.ly-like scale with the following estimates.
+              </InfoBox>
+
+              <div className="grid md:grid-cols-3 gap-6 my-6">
+                <div className="p-6 bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border border-emerald-500/20 rounded-xl">
+                  <div className="text-sm text-emerald-400 mb-2 font-semibold uppercase tracking-wide">Write QPS</div>
+                  <div className="text-3xl font-bold text-slate-100 mb-1">500</div>
+                  <div className="text-sm text-slate-400">new URLs per second</div>
+                </div>
+                
+                <div className="p-6 bg-gradient-to-br from-blue-500/10 to-blue-600/5 border border-blue-500/20 rounded-xl">
+                  <div className="text-sm text-blue-400 mb-2 font-semibold uppercase tracking-wide">Read QPS</div>
+                  <div className="text-3xl font-bold text-slate-100 mb-1">50,000</div>
+                  <div className="text-sm text-slate-400">redirects per second</div>
+                </div>
+                
+                <div className="p-6 bg-gradient-to-br from-purple-500/10 to-purple-600/5 border border-purple-500/20 rounded-xl">
+                  <div className="text-sm text-purple-400 mb-2 font-semibold uppercase tracking-wide">Read:Write</div>
+                  <div className="text-3xl font-bold text-slate-100 mb-1">100:1</div>
+                  <div className="text-sm text-slate-400">ratio (read-heavy)</div>
+                </div>
               </div>
-              <CodeBlock 
-                language="javascript"
-                code={`const BASE62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-function encode(num) {
-  let str = "";
+              <CollapsibleSection 
+                id="storage-calc" 
+                title="Storage Calculations" 
+                icon={Database}
+                defaultOpen={true}
+              >
+                <div className="space-y-4 text-slate-300">
+                  <div className="font-mono text-sm bg-slate-800/50 p-4 rounded-lg border border-slate-700/30">
+                    <div className="text-emerald-400 mb-2">// Storage over 10 years</div>
+                    <div>URLs per day = 500 QPS × 86,400 seconds = <span className="text-amber-400">43.2M URLs/day</span></div>
+                    <div>URLs per year = 43.2M × 365 = <span className="text-amber-400">15.8B URLs/year</span></div>
+                    <div>URLs in 10 years = 15.8B × 10 = <span className="text-amber-400">158B URLs</span></div>
+                    <div className="mt-3">Average URL size = 500 bytes (URL + metadata)</div>
+                    <div>Total storage = 158B × 500 bytes = <span className="text-emerald-400 font-bold">79 TB</span></div>
+                  </div>
+
+                  <InfoBox type="tip" title="Storage Optimization">
+                    With compression and efficient indexing, actual storage will be lower. Consider using columnar storage 
+                    for analytics data and time-series databases for click tracking.
+                  </InfoBox>
+                </div>
+              </CollapsibleSection>
+
+              <CollapsibleSection id="bandwidth-calc" title="Bandwidth Calculations" icon={Globe}>
+                <div className="space-y-4 text-slate-300">
+                  <div className="font-mono text-sm bg-slate-800/50 p-4 rounded-lg border border-slate-700/30">
+                    <div className="text-emerald-400 mb-2">// Incoming traffic (writes)</div>
+                    <div>500 URLs/sec × 500 bytes = <span className="text-amber-400">250 KB/sec = 0.25 MB/sec</span></div>
+                    
+                    <div className="mt-3 text-emerald-400">// Outgoing traffic (reads)</div>
+                    <div>50,000 redirects/sec × 500 bytes = <span className="text-amber-400">25 MB/sec</span></div>
+                    
+                    <div className="mt-3 text-slate-400">// Total bandwidth</div>
+                    <div>Ingress + Egress = <span className="text-emerald-400 font-bold">~25 MB/sec</span></div>
+                  </div>
+                </div>
+              </CollapsibleSection>
+            </section>
+
+            {/* Architecture */}
+            <section id="architecture">
+              <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+                <Globe className="w-8 h-8 text-cyan-400" />
+                System Architecture
+              </h2>
+
+              <p className="text-slate-300 leading-relaxed mb-6">
+                Our architecture follows a standard three-tier design with specialized components for URL generation, 
+                caching, and analytics. The system prioritizes read performance given the 100:1 read-to-write ratio.
+              </p>
+
+              <ArchitectureDiagram />
+
+              <div className="grid md:grid-cols-2 gap-6 mt-8">
+                <InfoBox type="key" title="Key Design Decisions">
+                  <ul className="space-y-2 ml-4 list-disc">
+                    <li>Redis for caching hot URLs (80/20 rule)</li>
+                    <li>Read replicas for scaling read operations</li>
+                    <li>Separate analytics pipeline to avoid blocking writes</li>
+                    <li>Load balancer with health checks and auto-scaling</li>
+                  </ul>
+                </InfoBox>
+
+                <InfoBox type="warning" title="Bottlenecks to Watch">
+                  <ul className="space-y-2 ml-4 list-disc">
+                    <li>Database write contention during peak hours</li>
+                    <li>Cache invalidation strategy</li>
+                    <li>Analytics write throughput</li>
+                    <li>Short code generation at scale</li>
+                  </ul>
+                </InfoBox>
+              </div>
+            </section>
+
+            {/* Database Design */}
+            <section id="database">
+              <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+                <Database className="w-8 h-8 text-purple-400" />
+                Database Design
+              </h2>
+
+              <p className="text-slate-300 leading-relaxed mb-6">
+                We use PostgreSQL for ACID compliance and strong consistency. The schema is optimized for fast lookups 
+                on the short_code column with proper indexing.
+              </p>
+
+              <DatabaseSchema />
+
+              <CollapsibleSection id="indexing-strategy" title="Indexing Strategy" icon={Zap} defaultOpen={true}>
+                <div className="space-y-4">
+                  <CodeBlock 
+                    language="SQL" 
+                    id="indexes"
+                    code={`-- Primary indexes for fast lookups
+CREATE UNIQUE INDEX idx_short_code ON urls(short_code);
+CREATE INDEX idx_user_urls ON urls(user_id, created_at DESC);
+CREATE INDEX idx_expiration ON urls(expires_at) WHERE expires_at IS NOT NULL;
+
+-- Analytics indexes
+CREATE INDEX idx_url_clicks_url_id ON url_clicks(url_id, clicked_at DESC);
+CREATE INDEX idx_clicks_time ON url_clicks(clicked_at);
+
+-- Partial index for active URLs
+CREATE INDEX idx_active_urls ON urls(created_at) 
+WHERE expires_at IS NULL OR expires_at > NOW();`}
+                  />
+
+                  <InfoBox type="tip" title="Index Performance">
+                    The partial index on active URLs significantly improves query performance for common lookups. 
+                    Regularly analyze query patterns and update indexes accordingly.
+                  </InfoBox>
+                </div>
+              </CollapsibleSection>
+            </section>
+
+            {/* API Design */}
+            <section id="api">
+              <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+                <Server className="w-8 h-8 text-blue-400" />
+                API Design
+              </h2>
+
+              <CollapsibleSection id="create-url" title="POST /api/shorten - Create Short URL" icon={Code} defaultOpen={true}>
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-slate-200">Request:</h4>
+                  <CodeBlock 
+                    language="JSON" 
+                    id="create-request"
+                    code={`{
+  "original_url": "https://www.example.com/very/long/url/with/many/parameters",
+  "custom_alias": "my-link",  // optional
+  "expires_at": "2026-12-31T23:59:59Z"  // optional
+}`}
+                  />
+
+                  <h4 className="font-semibold text-slate-200 mt-6">Response (201 Created):</h4>
+                  <CodeBlock 
+                    language="JSON" 
+                    id="create-response"
+                    code={`{
+  "short_url": "https://short.ly/abc123",
+  "short_code": "abc123",
+  "original_url": "https://www.example.com/very/long/url/with/many/parameters",
+  "created_at": "2026-02-08T10:30:00Z",
+  "expires_at": "2026-12-31T23:59:59Z"
+}`}
+                  />
+
+                  <h4 className="font-semibold text-slate-200 mt-6">Implementation:</h4>
+                  <CodeBlock 
+                    language="JavaScript" 
+                    id="create-implementation"
+                    code={`async function createShortUrl(req, res) {
+  const { original_url, custom_alias, expires_at } = req.body;
+  
+  // Validate URL
+  if (!isValidUrl(original_url)) {
+    return res.status(400).json({ error: 'Invalid URL' });
+  }
+  
+  // Generate or use custom short code
+  const shortCode = custom_alias || await generateUniqueShortCode();
+  
+  // Check if custom alias already exists
+  if (custom_alias && await shortCodeExists(shortCode)) {
+    return res.status(409).json({ error: 'Alias already taken' });
+  }
+  
+  // Store in database
+  const url = await db.urls.create({
+    short_code: shortCode,
+    original_url,
+    user_id: req.user?.id,
+    expires_at: expires_at || null
+  });
+  
+  return res.status(201).json({
+    short_url: \`https://short.ly/\${shortCode}\`,
+    short_code: shortCode,
+    original_url: url.original_url,
+    created_at: url.created_at,
+    expires_at: url.expires_at
+  });
+}`}
+                  />
+                </div>
+              </CollapsibleSection>
+
+              <CollapsibleSection id="redirect-url" title="GET /:shortCode - Redirect to Original URL" icon={Globe}>
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-slate-200">Response (301 Moved Permanently):</h4>
+                  <CodeBlock 
+                    language="HTTP" 
+                    id="redirect-response"
+                    code={`HTTP/1.1 301 Moved Permanently
+Location: https://www.example.com/very/long/url/with/many/parameters
+Cache-Control: public, max-age=3600`}
+                  />
+
+                  <h4 className="font-semibold text-slate-200 mt-6">Implementation with Caching:</h4>
+                  <CodeBlock 
+                    language="JavaScript" 
+                    id="redirect-implementation"
+                    code={`async function redirect(req, res) {
+  const { shortCode } = req.params;
+  
+  // Try cache first (Redis)
+  let url = await cache.get(\`url:\${shortCode}\`);
+  
+  if (!url) {
+    // Cache miss - query database
+    url = await db.urls.findOne({
+      where: { short_code: shortCode }
+    });
+    
+    if (!url) {
+      return res.status(404).json({ error: 'URL not found' });
+    }
+    
+    // Check expiration
+    if (url.expires_at && new Date(url.expires_at) < new Date()) {
+      return res.status(410).json({ error: 'URL has expired' });
+    }
+    
+    // Cache for 1 hour
+    await cache.set(\`url:\${shortCode}\`, url.original_url, 3600);
+  }
+  
+  // Track analytics asynchronously (non-blocking)
+  trackClick(shortCode, req);
+  
+  // Redirect with 301 (permanent) or 302 (temporary for custom analytics)
+  return res.redirect(301, url.original_url || url);
+}`}
+                  />
+
+                  <InfoBox type="key" title="301 vs 302 Redirects">
+                    Use 301 (permanent) for better SEO and caching, but use 302 (temporary) if you need to track every 
+                    click accurately, as browsers may cache 301 redirects.
+                  </InfoBox>
+                </div>
+              </CollapsibleSection>
+
+              <CollapsibleSection id="analytics-api" title="GET /api/analytics/:shortCode - Get URL Analytics" icon={TrendingUp}>
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-slate-200">Response (200 OK):</h4>
+                  <CodeBlock 
+                    language="JSON" 
+                    id="analytics-response"
+                    code={`{
+  "short_code": "abc123",
+  "total_clicks": 15847,
+  "clicks_by_date": [
+    { "date": "2026-02-01", "clicks": 1234 },
+    { "date": "2026-02-02", "clicks": 1456 }
+  ],
+  "top_referrers": [
+    { "referrer": "twitter.com", "clicks": 5230 },
+    { "referrer": "facebook.com", "clicks": 3120 }
+  ],
+  "geographic_distribution": [
+    { "country": "US", "clicks": 7500 },
+    { "country": "UK", "clicks": 2300 }
+  ],
+  "devices": {
+    "mobile": 9500,
+    "desktop": 5347,
+    "tablet": 1000
+  }
+}`}
+                  />
+                </div>
+              </CollapsibleSection>
+            </section>
+
+            {/* Scaling */}
+            <section id="scaling">
+              <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+                <Zap className="w-8 h-8 text-yellow-400" />
+                Scaling Strategy
+              </h2>
+
+              <CollapsibleSection id="url-generation" title="URL Short Code Generation" icon={Code} defaultOpen={true}>
+                <div className="space-y-4">
+                  <p className="text-slate-300">
+                    Two main approaches for generating unique short codes: Base62 encoding and pre-generated key ranges.
+                  </p>
+
+                  <h4 className="font-semibold text-slate-200 mt-6">Approach 1: Base62 Encoding</h4>
+                  <CodeBlock 
+                    language="JavaScript" 
+                    id="base62"
+                    code={`const BASE62 = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+function encodeBase62(num) {
   if (num === 0) return BASE62[0];
   
+  let encoded = '';
   while (num > 0) {
-    str = BASE62[num % 62] + str;
+    encoded = BASE62[num % 62] + encoded;
     num = Math.floor(num / 62);
   }
-  return str;
+  return encoded;
 }
 
-// Example:
-// encode(125) -> "21"
-// encode(999999) -> "4c91"`} 
-              />
-            </div>
-          </section>
+async function generateUniqueShortCode() {
+  // Use auto-increment ID from database
+  const id = await getNextSequenceValue();
+  
+  // Encode to base62 (7 chars supports 62^7 = 3.5 trillion URLs)
+  return encodeBase62(id).padStart(7, '0');
+}
 
-          {/* 5. Data Model */}
-          <section>
-            <SectionHeading id="database">Data Model Schema</SectionHeading>
-            <div className="overflow-hidden rounded-xl border border-[#262626]">
-              <table className="w-full text-left text-sm text-gray-400">
-                <thead className="bg-[#1a1a1a] text-gray-200 uppercase font-mono text-xs">
-                  <tr>
-                    <th className="px-6 py-4">Column Name</th>
-                    <th className="px-6 py-4">Type</th>
-                    <th className="px-6 py-4">Description</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#262626] bg-[#111]">
-                  <tr>
-                    <td className="px-6 py-4 font-mono text-blue-400">id</td>
-                    <td className="px-6 py-4 font-mono">BIGINT</td>
-                    <td className="px-6 py-4">Primary Key (Auto-incrementing or Snowflake ID)</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 font-mono text-purple-400">short_url</td>
-                    <td className="px-6 py-4 font-mono">VARCHAR(7)</td>
-                    <td className="px-6 py-4">The Base62 encoded string (Indexed)</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 font-mono">original_url</td>
-                    <td className="px-6 py-4 font-mono">VARCHAR(2048)</td>
-                    <td className="px-6 py-4">The actual destination URL</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 font-mono">created_at</td>
-                    <td className="px-6 py-4 font-mono">TIMESTAMP</td>
-                    <td className="px-6 py-4">For expiration logic</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
+// Example: ID 125837 -> base62 -> "w7D"
+// 62^7 = 3,521,614,606,208 possible combinations`}
+                  />
 
-          {/* 6. Scaling */}
-          <section>
-            <SectionHeading id="scaling">Scaling & Trade-offs</SectionHeading>
-            <div className="grid md:grid-cols-3 gap-6">
-              <InfoCard icon={Layers} title="Database Sharding">
-                Partition data based on the first character of the hash or short key. This distributes the load across multiple DB nodes.
-              </InfoCard>
-              <InfoCard icon={Zap} title="Caching (Redis)">
-                Cache the top 20% of hot URLs. Use an eviction policy like LRU (Least Recently Used) to keep memory efficient.
-              </InfoCard>
-              <InfoCard icon={AlertCircle} title="Race Conditions">
-                If users pick custom URLs, multiple requests might try to claim "google". Use DB unique constraints or distributed locks.
-              </InfoCard>
-            </div>
-          </section>
+                  <h4 className="font-semibold text-slate-200 mt-6">Approach 2: Key Range Distribution</h4>
+                  <CodeBlock 
+                    language="JavaScript" 
+                    id="key-range"
+                    code={`// Key Generation Service (separate microservice)
+class KeyGenerationService {
+  constructor() {
+    this.serverIds = 1000; // 1000 application servers
+    this.serverId = getServerId(); // Unique ID per server
+    this.counter = 0;
+  }
+  
+  generateKey() {
+    const timestamp = Date.now();
+    const serverPart = this.serverId;
+    const counterPart = this.counter++;
+    
+    // Combine: timestamp + serverId + counter
+    const uniqueId = (timestamp * 1000000) + (serverPart * 1000) + counterPart;
+    
+    return encodeBase62(uniqueId);
+  }
+}
 
-          {/* Quiz & Footer */}
-          <QuizComponent />
+// Guarantees uniqueness across distributed servers without coordination`}
+                  />
 
-          <div className="mt-20 pt-10 border-t border-[#262626] flex justify-between items-center">
-            <div>
-              <h4 className="text-gray-200 font-bold mb-1">Next Topic</h4>
-              <p className="text-gray-500 text-sm">Design a Rate Limiter</p>
-            </div>
-            <button className="flex items-center gap-2 px-6 py-3 bg-white text-black rounded-full font-bold hover:bg-gray-200 transition-colors">
-              Continue <ArrowRight size={18} />
-            </button>
-          </div>
+                  <InfoBox type="tip" title="Trade-offs">
+                    <strong>Base62:</strong> Simple but requires sequence coordination. 
+                    <strong>Key Range:</strong> No coordination needed but slightly longer codes. 
+                    For massive scale, use Snowflake-like IDs or ZooKeeper for coordination.
+                  </InfoBox>
+                </div>
+              </CollapsibleSection>
 
-        </main>
+              <CollapsibleSection id="caching-strategy" title="Caching Strategy" icon={Zap}>
+                <div className="space-y-4">
+                  <p className="text-slate-300">
+                    Implement a multi-level caching strategy to handle 50K QPS read traffic efficiently.
+                  </p>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="p-4 bg-slate-800/30 border border-slate-700/50 rounded-lg">
+                      <h4 className="font-semibold text-emerald-400 mb-3">Cache Layer 1: CDN</h4>
+                      <ul className="space-y-2 text-sm text-slate-300 ml-4 list-disc">
+                        <li>Cache redirect responses at edge</li>
+                        <li>Handles ~80% of traffic</li>
+                        <li>TTL: 1 hour for popular URLs</li>
+                        <li>CloudFront, Cloudflare, Fastly</li>
+                      </ul>
+                    </div>
+
+                    <div className="p-4 bg-slate-800/30 border border-slate-700/50 rounded-lg">
+                      <h4 className="font-semibold text-blue-400 mb-3">Cache Layer 2: Redis</h4>
+                      <ul className="space-y-2 text-sm text-slate-300 ml-4 list-disc">
+                        <li>In-memory cache for hot URLs</li>
+                        <li>Handles ~15% of traffic</li>
+                        <li>TTL: 24 hours</li>
+                        <li>LRU eviction policy</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <CodeBlock 
+                    language="JavaScript" 
+                    id="cache-implementation"
+                    code={`// Cache hierarchy implementation
+async function getUrl(shortCode) {
+  // L1: Check Redis
+  const cached = await redis.get(\`url:\${shortCode}\`);
+  if (cached) {
+    return cached;
+  }
+  
+  // L2: Query database
+  const url = await db.urls.findOne({ 
+    where: { short_code: shortCode } 
+  });
+  
+  if (url) {
+    // Populate cache with TTL based on access pattern
+    const ttl = calculateTTL(url);
+    await redis.setex(\`url:\${shortCode}\`, ttl, url.original_url);
+  }
+  
+  return url?.original_url;
+}
+
+function calculateTTL(url) {
+  // Hot URLs (accessed frequently) get longer TTL
+  const accessCount = url.total_clicks || 0;
+  
+  if (accessCount > 10000) return 86400;  // 24 hours
+  if (accessCount > 1000) return 3600;    // 1 hour
+  return 600;  // 10 minutes for cold URLs
+}`}
+                  />
+                </div>
+              </CollapsibleSection>
+
+              <CollapsibleSection id="database-scaling" title="Database Scaling" icon={Database}>
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-slate-200">Sharding Strategy</h4>
+                  <p className="text-slate-300">
+                    Horizontal partitioning based on short_code hash to distribute load across multiple database instances.
+                  </p>
+
+                  <CodeBlock 
+                    language="JavaScript" 
+                    id="sharding"
+                    code={`// Hash-based sharding
+const NUM_SHARDS = 16;
+
+function getShardId(shortCode) {
+  // Consistent hashing based on first characters
+  const hash = shortCode.charCodeAt(0) + shortCode.charCodeAt(1);
+  return hash % NUM_SHARDS;
+}
+
+async function getUrlFromShard(shortCode) {
+  const shardId = getShardId(shortCode);
+  const shard = dbShards[shardId];
+  
+  return await shard.query(
+    'SELECT original_url FROM urls WHERE short_code = $1',
+    [shortCode]
+  );
+}
+
+// Each shard handles ~6.25% of total traffic
+// Supports horizontal scaling by adding more shards`}
+                  />
+
+                  <InfoBox type="warning" title="Sharding Considerations">
+                    Resharding is expensive. Plan shard count based on 5-10 year growth projections. Use virtual shards 
+                    (e.g., 256 virtual shards mapped to 16 physical shards) for easier future rebalancing.
+                  </InfoBox>
+                </div>
+              </CollapsibleSection>
+            </section>
+
+            {/* Trade-offs */}
+            <section id="tradeoffs">
+              <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+                <AlertCircle className="w-8 h-8 text-orange-400" />
+                Design Trade-offs
+              </h2>
+
+              <div className="space-y-6">
+                <div className="p-6 bg-slate-800/30 border border-slate-700/50 rounded-xl">
+                  <h3 className="text-xl font-semibold mb-4 text-emerald-400">SQL vs NoSQL</h3>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-semibold text-slate-200 mb-3">PostgreSQL (Chosen)</h4>
+                      <ul className="space-y-2 text-sm text-slate-300 ml-4 list-disc">
+                        <li>ACID compliance for data integrity</li>
+                        <li>Strong consistency guarantees</li>
+                        <li>Excellent for analytics queries</li>
+                        <li>Mature ecosystem and tooling</li>
+                        <li>Good enough performance with proper indexing</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-slate-200 mb-3">Cassandra/DynamoDB</h4>
+                      <ul className="space-y-2 text-sm text-slate-300 ml-4 list-disc">
+                        <li>Better write scalability</li>
+                        <li>Easier horizontal scaling</li>
+                        <li>Higher throughput potential</li>
+                        <li>Eventually consistent (trade-off)</li>
+                        <li>More complex analytics queries</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-6 bg-slate-800/30 border border-slate-700/50 rounded-xl">
+                  <h3 className="text-xl font-semibold mb-4 text-blue-400">Short Code Length</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead className="bg-slate-700/30">
+                        <tr>
+                          <th className="px-4 py-3 text-left text-slate-300">Length</th>
+                          <th className="px-4 py-3 text-left text-slate-300">Combinations (Base62)</th>
+                          <th className="px-4 py-3 text-left text-slate-300">Good For</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-700/30">
+                        <tr>
+                          <td className="px-4 py-3 font-mono text-emerald-400">6 chars</td>
+                          <td className="px-4 py-3 text-slate-300">56.8 billion</td>
+                          <td className="px-4 py-3 text-slate-400">Small to medium services</td>
+                        </tr>
+                        <tr>
+                          <td className="px-4 py-3 font-mono text-emerald-400">7 chars</td>
+                          <td className="px-4 py-3 text-slate-300">3.5 trillion</td>
+                          <td className="px-4 py-3 text-slate-400">Large scale (recommended)</td>
+                        </tr>
+                        <tr>
+                          <td className="px-4 py-3 font-mono text-emerald-400">8 chars</td>
+                          <td className="px-4 py-3 text-slate-300">218 trillion</td>
+                          <td className="px-4 py-3 text-slate-400">Massive scale, future-proof</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="p-6 bg-slate-800/30 border border-slate-700/50 rounded-xl">
+                  <h3 className="text-xl font-semibold mb-4 text-purple-400">301 vs 302 Redirects</h3>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-semibold text-slate-200 mb-3">301 Permanent</h4>
+                      <ul className="space-y-2 text-sm text-slate-300 ml-4 list-disc">
+                        <li>Better for SEO (link equity transfer)</li>
+                        <li>Browsers/CDNs cache aggressively</li>
+                        <li>Reduced server load</li>
+                        <li>May miss some analytics data</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-slate-200 mb-3">302 Temporary</h4>
+                      <ul className="space-y-2 text-sm text-slate-300 ml-4 list-disc">
+                        <li>Every click hits your server</li>
+                        <li>More accurate analytics</li>
+                        <li>Higher server load</li>
+                        <li>Better for A/B testing</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Summary */}
+            <section className="mt-16 p-8 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-emerald-500/20 rounded-2xl">
+              <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                <Lightbulb className="w-7 h-7 text-emerald-400" />
+                Key Takeaways
+              </h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="font-semibold text-slate-200 mb-3">Core Design Principles</h3>
+                  <ul className="space-y-2 text-slate-300 ml-4 list-disc">
+                    <li>Read-heavy systems need aggressive caching</li>
+                    <li>Short code generation must be collision-free at scale</li>
+                    <li>Separate analytics pipeline from critical path</li>
+                    <li>Plan for horizontal scaling from day one</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-200 mb-3">Production Considerations</h3>
+                  <ul className="space-y-2 text-slate-300 ml-4 list-disc">
+                    <li>Monitor cache hit rates and adjust TTLs</li>
+                    <li>Implement rate limiting to prevent abuse</li>
+                    <li>Set up automated URL expiration cleanup</li>
+                    <li>Use CDN for global low-latency redirects</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            {/* Next Steps */}
+            <section className="mt-12 p-6 bg-slate-800/30 border border-slate-700/50 rounded-xl">
+              <h3 className="text-xl font-semibold mb-4 text-slate-200">Continue Learning</h3>
+              <div className="grid md:grid-cols-3 gap-4">
+                <a href="#" className="p-4 bg-slate-700/30 hover:bg-slate-700/50 rounded-lg transition-colors border border-slate-600/30 hover:border-emerald-500/30">
+                  <div className="text-sm font-semibold text-emerald-400 mb-1">Next Topic</div>
+                  <div className="text-slate-200">Design Instagram</div>
+                </a>
+                <a href="#" className="p-4 bg-slate-700/30 hover:bg-slate-700/50 rounded-lg transition-colors border border-slate-600/30 hover:border-blue-500/30">
+                  <div className="text-sm font-semibold text-blue-400 mb-1">Related</div>
+                  <div className="text-slate-200">Rate Limiting</div>
+                </a>
+                <a href="#" className="p-4 bg-slate-700/30 hover:bg-slate-700/50 rounded-lg transition-colors border border-slate-600/30 hover:border-purple-500/30">
+                  <div className="text-sm font-semibold text-purple-400 mb-1">Deep Dive</div>
+                  <div className="text-slate-200">Caching Strategies</div>
+                </a>
+              </div>
+            </section>
+          </main>
+        </div>
       </div>
+
+      {/* Custom styles for animations */}
+      <style>{`
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-slideDown {
+          animation: slideDown 0.3s ease-out;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-track {
+          background: #0f172a;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+          background: #334155;
+          border-radius: 3px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+          background: #475569;
+        }
+      `}</style>
     </div>
   );
 };
