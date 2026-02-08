@@ -58,10 +58,18 @@ export const AuthProvider = ({ children }) => {
         .select('question_id')
         .eq('user_id', userId);
 
-      if (error) throw error;
-      setSolvedQuestions(data.map(item => item.question_id));
+      if (error) {
+        console.error("Supabase Error:", error);
+        throw error;
+      }
+      
+      // Defensive check: Ensure data is an array before mapping
+      const validData = Array.isArray(data) ? data : [];
+      setSolvedQuestions(validData.map(item => item.question_id));
     } catch (error) {
       console.error("Failed to fetch progress", error.message);
+      // Fallback to empty array so app doesn't crash
+      setSolvedQuestions([]);
     }
   };
 
