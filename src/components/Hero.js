@@ -3,6 +3,7 @@ import { Container, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaArrowRight } from 'react-icons/fa';
+import Logo from './Logo';
 
 function Hero() {
   return (
@@ -10,9 +11,18 @@ function Hero() {
       <div className="hero-orb" />
       <Container style={{ position: 'relative', zIndex: 1 }}>
         <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, ease: 'easeOut' }}
+          className="hero-logo-wrapper"
+        >
+          <Logo size={72} glow />
+        </motion.div>
+
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <div className="hero-social-proof">
             170+ problems &middot; 20 companies &middot; System design guides

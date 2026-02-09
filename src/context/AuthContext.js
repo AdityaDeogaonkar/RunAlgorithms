@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
+import Logo from '../components/Logo';
 
 const AuthContext = createContext();
 
@@ -8,6 +9,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [signingOut, setSigningOut] = useState(false);
   const [solvedQuestions, setSolvedQuestions] = useState([]);
 
   useEffect(() => {
@@ -101,7 +103,21 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    await supabase.auth.signOut();
+    try {
+      setSigningOut(true);
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      // Clear immediately — don't wait for onAuthStateChange
+      setCurrentUser(null);
+      setSolvedQuestions([]);
+    } catch (error) {
+      console.error("Error signing out:", error.message);
+      // Force clear local state even if Supabase call fails
+      setCurrentUser(null);
+      setSolvedQuestions([]);
+    } finally {
+      setSigningOut(false);
+    }
   };
 
   const updateLocalProgress = (questionId, isSolved) => {
@@ -117,6 +133,7 @@ export const AuthProvider = ({ children }) => {
     solvedQuestions,
     signInWithGoogle,
     logout,
+    signingOut,
     updateLocalProgress
   };
 
@@ -126,32 +143,18 @@ export const AuthProvider = ({ children }) => {
 
         {loading ? (
 
-          <div style={{ 
-
-            height: '100vh', 
-
-            display: 'flex', 
-
-            alignItems: 'center', 
-
-            justifyContent: 'center', 
-
-            background: '#020617', 
-
-            color: '#3b82f6',
-
-            flexDirection: 'column'
-
+          <div style={{
+            height: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'var(--bg-base)',
+            color: 'var(--accent)',
+            flexDirection: 'column',
+            gap: '1.5rem'
           }}>
-
-            <div className="spinner-border" role="status" style={{ width: '3rem', height: '3rem' }}>
-
-              <span className="visually-hidden">Loading...</span>
-
-            </div>
-
-            <p style={{ marginTop: '20px', fontFamily: 'sans-serif' }}>Initializing...</p>
-
+            <Logo size={56} glow className="ra-logo-pulse" />
+            <p style={{ margin: 0, fontFamily: 'Inter, system-ui, sans-serif', color: 'var(--text-muted)', fontSize: '0.9rem', letterSpacing: '0.5px' }}>Loading...</p>
           </div>
 
         ) : children}
