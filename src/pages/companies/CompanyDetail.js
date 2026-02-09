@@ -77,7 +77,7 @@ function CompanyDetail() {
           <div className="company-banner" style={{ borderRadius: '16px 16px 0 0', marginBottom: 0 }}>
             <CompanyLogo company={company} size={90} />
             <h1 className="fw-bold mb-2" style={{ fontSize: '2rem' }}>{company.name} Interview Prep</h1>
-            <p style={{ color: '#a1a1aa' }}>{company.description}</p>
+            <p style={{ color: '#b4b4bd' }}>{company.description}</p>
             <span className="section-badge">{company.questions.length} Questions</span>
           </div>
 
@@ -99,8 +99,8 @@ function CompanyDetail() {
                     <td className="text-center align-middle">
                       <ProgressToggle questionId={`${company.id}-${q.id}`} />
                     </td>
-                    <td style={{ color: '#52525b' }}>{index + 1}</td>
-                    <td style={{ fontWeight: 500, color: '#fafafa' }}>{q.title}</td>
+                    <td style={{ color: '#71717a' }}>{index + 1}</td>
+                    <td style={{ fontWeight: 500, color: '#f4f4f5' }}>{q.title}</td>
                     <td>
                       <span className={`section-badge ${getDifficultyClass(q.difficulty)}`}>
                         {q.difficulty}

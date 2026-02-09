@@ -64,7 +64,7 @@ function CompanyList() {
         {/* Search */}
         <div className="d-flex justify-content-center mb-4" style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ position: 'relative', width: '100%', maxWidth: '400px' }}>
-            <FaSearch style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#a1a1aa' }} />
+            <FaSearch style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#b4b4bd' }} />
             <input
               type="text"
               className="company-search"
@@ -89,8 +89,8 @@ function CompanyList() {
                   <Link to={`/companies/${company.id}`} className="text-decoration-none">
                     <div className="company-card h-100 d-flex flex-column align-items-center text-center p-4">
                       <CompanyLogo company={company} />
-                      <h3 className="h5 fw-bold mb-1" style={{ color: '#fafafa' }}>{company.name}</h3>
-                      <p className="small mb-2" style={{ color: '#a1a1aa' }}>
+                      <h3 className="h5 fw-bold mb-1" style={{ color: '#f4f4f5' }}>{company.name}</h3>
+                      <p className="small mb-2" style={{ color: '#b4b4bd' }}>
                         {total} Questions
                       </p>
                       {solved > 0 && (

@@ -5,15 +5,15 @@
 
 /* GLOBAL VARIABLES */
 :root {
-  --bg-base: #09090b;
-  --bg-surface: #111113;
-  --bg-card: #161618;
-  --bg-card-hover: #1c1c1f;
-  --text-primary: #fafafa;
-  --text-secondary: #a1a1aa;
-  --text-muted: #52525b;
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-hover: rgba(255, 255, 255, 0.12);
+  --bg-base: #0a0a0c;
+  --bg-surface: #131316;
+  --bg-card: #18181b;
+  --bg-card-hover: #1f1f23;
+  --text-primary: #f4f4f5;
+  --text-secondary: #b4b4bd;
+  --text-muted: #71717a;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.14);
   --accent: #818cf8;
   --accent-rgb: 129, 140, 248;
   --color-easy: #34d399;
@@ -70,6 +70,9 @@ body {
   background-color: var(--bg-base);
   color: var(--text-primary);
   font-family: var(--font-main);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   margin: 0;
   padding: 0;
@@ -97,7 +100,7 @@ body::before {
    ============================================ */
 
 .navbar-magical {
-  background: rgba(9, 9, 11, 0.8) !important;
+  background: rgba(10, 10, 12, 0.85) !important;
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-subtle);
   transition: all 0.3s ease;
@@ -709,14 +712,15 @@ body::before {
 }
 
 .sd-article-content section {
-  margin-bottom: 3rem;
+  margin-bottom: 3.5rem;
 }
 
 .sd-article-content h2 {
-  font-size: 1.75rem;
+  font-size: 1.85rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -728,17 +732,18 @@ body::before {
 }
 
 .sd-article-content h3 {
-  font-size: 1.3rem;
+  font-size: 1.35rem;
   font-weight: 600;
   color: var(--text-primary);
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+  margin-top: 1.75rem;
+  margin-bottom: 0.85rem;
 }
 
 .sd-article-content p {
   color: var(--text-secondary);
-  line-height: 1.8;
-  font-size: 1rem;
+  line-height: 1.85;
+  font-size: 1.075rem;
 }
 
 /* TOC Sidebar */
@@ -750,11 +755,11 @@ body::before {
 }
 
 .sd-toc-label {
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   margin-bottom: 0.75rem;
 }
 
@@ -777,9 +782,9 @@ body::before {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.55rem 0.75rem;
   border-radius: 8px;
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   font-weight: 500;
   color: var(--text-secondary);
   cursor: pointer;
@@ -862,9 +867,9 @@ body::before {
 
 .sd-code-block code {
   font-family: var(--font-mono);
-  font-size: 0.85rem;
-  line-height: 1.7;
-  color: #e2e8f0;
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: #e8eaed;
 }
 
 /* Collapsible Section */
@@ -904,9 +909,10 @@ body::before {
 }
 
 .sd-collapsible-trigger h3 {
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 600;
   margin: 0;
+  letter-spacing: -0.01em;
 }
 
 .sd-collapsible-body {
@@ -962,14 +968,14 @@ body::before {
 .sd-info-box .info-title {
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 0.35rem;
-  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
+  font-size: 1rem;
 }
 
 .sd-info-box .info-body {
   color: var(--text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.6;
+  font-size: 0.95rem;
+  line-height: 1.7;
 }
 
 .sd-info-box .info-body ul {
@@ -978,7 +984,7 @@ body::before {
 }
 
 .sd-info-box .info-body li {
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.4rem;
 }
 
 /* Architecture SVG container */
@@ -1040,7 +1046,7 @@ body::before {
 .sd-schema-table table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
 .sd-schema-table table th {
@@ -1120,7 +1126,7 @@ body::before {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 600;
   margin: 0 0 1rem 0;
 }
@@ -1136,9 +1142,9 @@ body::before {
   align-items: flex-start;
   gap: 0.5rem;
   color: var(--text-secondary);
-  font-size: 0.9rem;
-  margin-bottom: 0.6rem;
-  line-height: 1.5;
+  font-size: 0.95rem;
+  margin-bottom: 0.7rem;
+  line-height: 1.6;
 }
 
 .sd-req-box li .bullet {
@@ -1169,9 +1175,9 @@ body::before {
 
 .sd-compare-box li {
   color: var(--text-secondary);
-  font-size: 0.9rem;
-  margin-bottom: 0.4rem;
-  line-height: 1.5;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
 }
 
 /* Tradeoff card */
@@ -1218,8 +1224,9 @@ body::before {
 
 .sd-cache-card li {
   color: var(--text-secondary);
-  font-size: 0.85rem;
-  margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+  line-height: 1.5;
 }
 
 /* SD List page — toolbar */
@@ -1751,9 +1758,9 @@ body::before {
 
 .sd-takeaways li {
   color: var(--text-secondary);
-  font-size: 0.9rem;
-  margin-bottom: 0.4rem;
-  line-height: 1.5;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
 }
 
 /* ============================================

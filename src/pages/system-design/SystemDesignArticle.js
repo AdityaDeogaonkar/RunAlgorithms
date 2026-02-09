@@ -85,49 +85,49 @@ const ArchitectureDiagram = () => (
       {/* Client */}
       <g transform="translate(50, 50)">
         <rect width="120" height="80" rx="8" fill="#161618" stroke="#818cf8" strokeWidth="2"/>
-        <text x="60" y="35" textAnchor="middle" fill="#fafafa" fontSize="14" fontWeight="600">Client</text>
-        <text x="60" y="55" textAnchor="middle" fill="#a1a1aa" fontSize="11">Browser/App</text>
+        <text x="60" y="35" textAnchor="middle" fill="#f4f4f5" fontSize="14" fontWeight="600">Client</text>
+        <text x="60" y="55" textAnchor="middle" fill="#b4b4bd" fontSize="11">Browser/App</text>
       </g>
       {/* Load Balancer */}
       <g transform="translate(280, 50)">
         <rect width="140" height="80" rx="8" fill="#161618" stroke="#3b82f6" strokeWidth="2"/>
-        <text x="70" y="35" textAnchor="middle" fill="#fafafa" fontSize="14" fontWeight="600">Load Balancer</text>
-        <text x="70" y="55" textAnchor="middle" fill="#a1a1aa" fontSize="11">NGINX/ALB</text>
+        <text x="70" y="35" textAnchor="middle" fill="#f4f4f5" fontSize="14" fontWeight="600">Load Balancer</text>
+        <text x="70" y="55" textAnchor="middle" fill="#b4b4bd" fontSize="11">NGINX/ALB</text>
       </g>
       {/* App Servers */}
       <g transform="translate(260, 180)">
         <rect width="80" height="70" rx="8" fill="#161618" stroke="#8b5cf6" strokeWidth="2"/>
-        <text x="40" y="30" textAnchor="middle" fill="#fafafa" fontSize="12" fontWeight="600">API</text>
-        <text x="40" y="48" textAnchor="middle" fill="#a1a1aa" fontSize="10">Server 1</text>
+        <text x="40" y="30" textAnchor="middle" fill="#f4f4f5" fontSize="12" fontWeight="600">API</text>
+        <text x="40" y="48" textAnchor="middle" fill="#b4b4bd" fontSize="10">Server 1</text>
       </g>
       <g transform="translate(360, 180)">
         <rect width="80" height="70" rx="8" fill="#161618" stroke="#8b5cf6" strokeWidth="2"/>
-        <text x="40" y="30" textAnchor="middle" fill="#fafafa" fontSize="12" fontWeight="600">API</text>
-        <text x="40" y="48" textAnchor="middle" fill="#a1a1aa" fontSize="10">Server 2</text>
+        <text x="40" y="30" textAnchor="middle" fill="#f4f4f5" fontSize="12" fontWeight="600">API</text>
+        <text x="40" y="48" textAnchor="middle" fill="#b4b4bd" fontSize="10">Server 2</text>
       </g>
       {/* Cache */}
       <g transform="translate(520, 50)">
         <rect width="120" height="80" rx="8" fill="#161618" stroke="#fbbf24" strokeWidth="2"/>
-        <text x="60" y="35" textAnchor="middle" fill="#fafafa" fontSize="14" fontWeight="600">Redis</text>
-        <text x="60" y="55" textAnchor="middle" fill="#a1a1aa" fontSize="11">Cache Layer</text>
+        <text x="60" y="35" textAnchor="middle" fill="#f4f4f5" fontSize="14" fontWeight="600">Redis</text>
+        <text x="60" y="55" textAnchor="middle" fill="#b4b4bd" fontSize="11">Cache Layer</text>
       </g>
       {/* Database */}
       <g transform="translate(520, 180)">
         <rect width="120" height="70" rx="8" fill="#161618" stroke="#ec4899" strokeWidth="2"/>
-        <text x="60" y="30" textAnchor="middle" fill="#fafafa" fontSize="14" fontWeight="600">PostgreSQL</text>
-        <text x="60" y="48" textAnchor="middle" fill="#a1a1aa" fontSize="11">Primary DB</text>
+        <text x="60" y="30" textAnchor="middle" fill="#f4f4f5" fontSize="14" fontWeight="600">PostgreSQL</text>
+        <text x="60" y="48" textAnchor="middle" fill="#b4b4bd" fontSize="11">Primary DB</text>
       </g>
       {/* Replica */}
       <g transform="translate(520, 280)">
         <rect width="120" height="70" rx="8" fill="#161618" stroke="#ec4899" strokeWidth="2" strokeDasharray="4"/>
-        <text x="60" y="30" textAnchor="middle" fill="#fafafa" fontSize="14" fontWeight="600">PostgreSQL</text>
-        <text x="60" y="48" textAnchor="middle" fill="#a1a1aa" fontSize="11">Read Replica</text>
+        <text x="60" y="30" textAnchor="middle" fill="#f4f4f5" fontSize="14" fontWeight="600">PostgreSQL</text>
+        <text x="60" y="48" textAnchor="middle" fill="#b4b4bd" fontSize="11">Read Replica</text>
       </g>
       {/* Analytics */}
       <g transform="translate(520, 380)">
         <rect width="120" height="70" rx="8" fill="#161618" stroke="#818cf8" strokeWidth="2"/>
-        <text x="60" y="30" textAnchor="middle" fill="#fafafa" fontSize="14" fontWeight="600">Analytics</text>
-        <text x="60" y="48" textAnchor="middle" fill="#a1a1aa" fontSize="11">Clickstream</text>
+        <text x="60" y="30" textAnchor="middle" fill="#f4f4f5" fontSize="14" fontWeight="600">Analytics</text>
+        <text x="60" y="48" textAnchor="middle" fill="#b4b4bd" fontSize="11">Clickstream</text>
       </g>
       {/* Arrows */}
       <line x1="170" y1="90" x2="280" y2="90" stroke="#818cf8" strokeWidth="2" markerEnd="url(#arrowhead)"/>
@@ -208,7 +208,7 @@ const ContentRenderer = ({ blocks, copiedCode, onCopy, expandedSections, onToggl
 
       case 'heading':
         if (block.level === 3) return <h3 key={idx}>{block.text}</h3>;
-        if (block.level === 4) return <h4 key={idx} style={{ fontWeight: 600, color: '#fafafa', marginTop: '1.5rem', marginBottom: '0.5rem' }}>{block.text}</h4>;
+        if (block.level === 4) return <h4 key={idx} style={{ fontWeight: 600, color: '#f4f4f5', fontSize: '1.05rem', marginTop: '1.5rem', marginBottom: '0.5rem' }}>{block.text}</h4>;
         return <h3 key={idx}>{block.text}</h3>;
 
       case 'code':
