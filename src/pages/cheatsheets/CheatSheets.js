@@ -1,41 +1,59 @@
-import React from 'react';
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Container } from 'react-bootstrap';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { FaBook, FaChevronDown, FaChevronRight } from 'react-icons/fa';
 import SEO from '../../components/SEO';
+import SectionWrapper from '../../components/SectionWrapper';
+import SectionHeader from '../../components/SectionHeader';
 import { cheatSheets } from './cheatSheetData';
 
 function CheatSheets() {
-  return (
-    <Container className="my-5">
-      <SEO 
-        title="DSA Cheat Sheets" 
-        description="Comprehensive Data Structures and Algorithms Cheat Sheets. Time Complexity, Graph Templates, Sliding Window, and more."
-        url="/cheatsheets"
-      />
-      <div className="text-center mb-5">
-        <h1>📚 DSA Cheat Sheets</h1>
-        <p className="lead text-muted">Essential templates, patterns, and complexity charts for quick revision.</p>
-      </div>
+  const [expanded, setExpanded] = useState({});
 
-      <Row xs={1} md={1} lg={1} className="g-4">
-        {cheatSheets.map((sheet) => (
-          <Col key={sheet.id}>
-            <Card className="h-100 shadow-sm border-0 cheat-sheet-card">
-              <Card.Header className="bg-primary text-white py-3">
-                <h5 className="mb-0 fw-bold">{sheet.title}</h5>
-              </Card.Header>
-              <Card.Body className="p-4 bg-light">
-                <p className="text-muted mb-3">{sheet.description}</p>
-                <div className="markdown-content cheat-sheet-content bg-white p-3 rounded border">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{sheet.content}</ReactMarkdown>
+  const toggleSheet = (id) => {
+    setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  return (
+    <SectionWrapper section="cheatsheets">
+      <Container style={{ paddingBottom: '4rem' }}>
+        <SEO
+          title="DSA Cheat Sheets"
+          description="Comprehensive Data Structures and Algorithms Cheat Sheets. Time Complexity, Graph Templates, Sliding Window, and more."
+          url="/cheatsheets"
+        />
+        <SectionHeader
+          icon={FaBook}
+          title="DSA Cheat Sheets"
+          subtitle="Essential templates, patterns, and complexity charts for quick revision."
+        />
+
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          {cheatSheets.map((sheet) => {
+            const isOpen = expanded[sheet.id] !== false; // default open
+            return (
+              <div key={sheet.id} className="cheat-sheet-card">
+                <div className="cheat-sheet-header" onClick={() => toggleSheet(sheet.id)}>
+                  <h3>{sheet.title}</h3>
+                  <span className="toggle-icon">
+                    {isOpen ? <FaChevronDown size={14} /> : <FaChevronRight size={14} />}
+                  </span>
                 </div>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Row>
-    </Container>
+                {isOpen && (
+                  <div className="cheat-sheet-body">
+                    <p style={{ color: '#94a3b8', marginBottom: '1rem', fontSize: '0.9rem' }}>{sheet.description}</p>
+                    <div className="markdown-content">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{sheet.content}</ReactMarkdown>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </Container>
+    </SectionWrapper>
   );
 }
 

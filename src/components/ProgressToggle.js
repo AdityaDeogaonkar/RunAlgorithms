@@ -64,15 +64,16 @@ const ProgressToggle = ({ questionId }) => {
   if (loading) return <Spinner animation="border" size="sm" variant="primary" />;
 
   return (
-    <div 
-      onClick={handleToggle} 
+    <div
+      className="progress-toggle"
+      onClick={handleToggle}
       style={{ cursor: 'pointer', fontSize: '1.2rem' }}
       title={isSolved ? "Mark as unsolved" : "Mark as solved"}
     >
       {isSolved ? (
-        <FaCheckCircle className="text-success" />
+        <FaCheckCircle className="solved" />
       ) : (
-        <FaRegCircle className="text-secondary" style={{ opacity: 0.5 }} />
+        <FaRegCircle className="unsolved" />
       )}
     </div>
   );

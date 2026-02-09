@@ -9,8 +9,8 @@ import TopicDetail from './pages/TopicDetail';
 import POTDList from './pages/potd/POTDList';
 import POTDDetail from './pages/potd/POTDDetail';
 import CheatSheets from './pages/cheatsheets/CheatSheets';
-import SystemDesign from './pages/system-design/SystemDesign';
-import UrlShortenerSystemDesign from './pages/system-design/UrlShortenerSystemDesign';
+import SystemDesignList from './pages/system-design/SystemDesignList';
+import SystemDesignArticle from './pages/system-design/SystemDesignArticle';
 import CompanyList from './pages/companies/CompanyList';
 import CompanyDetail from './pages/companies/CompanyDetail';
 import './App.css';
@@ -42,8 +42,8 @@ function App() {
               <Route path="/potd" element={<POTDList />} />
               <Route path="/potd/:id" element={<POTDDetail />} />
               <Route path="/cheatsheets" element={<CheatSheets />} />
-              <Route path="/system-design" element={<SystemDesign />} />
-              <Route path="/system-design/url-shortener" element={<UrlShortenerSystemDesign />} />
+              <Route path="/system-design" element={<SystemDesignList />} />
+              <Route path="/system-design/:articleId" element={<SystemDesignArticle />} />
               <Route path="/companies" element={<CompanyList />} />
               <Route path="/companies/:id" element={<CompanyDetail />} />
               <Route path="/topic/:id" element={<TopicDetail />} />

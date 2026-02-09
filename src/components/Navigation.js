@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navbar, Container, Nav, Button, Dropdown } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
-import { FaCode, FaFire, FaLayerGroup, FaBook, FaHome, FaBuilding, FaGoogle, FaUserCircle } from 'react-icons/fa';
+import { FaFire, FaLayerGroup, FaBook, FaHome, FaBuilding, FaGoogle, FaUserCircle } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 
 function Navigation() {
@@ -11,8 +11,8 @@ function Navigation() {
   return (
     <Navbar expand="lg" variant="dark" fixed="top" className="navbar-magical">
       <Container>
-        <Navbar.Brand as={Link} to="/" className="navbar-brand-magical d-flex align-items-center gap-2">
-          <FaCode /> RunAlgorithms
+        <Navbar.Brand as={Link} to="/" className="navbar-brand-magical">
+          RunAlgorithms
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
@@ -49,10 +49,10 @@ function Navigation() {
                 </Dropdown.Menu>
               </Dropdown>
             ) : (
-              <Button 
-                onClick={signInWithGoogle} 
-                variant="outline-light" 
-                size="sm" 
+              <Button
+                onClick={signInWithGoogle}
+                variant="outline-light"
+                size="sm"
                 className="d-flex align-items-center gap-2 rounded-pill px-3"
                 style={{ borderColor: 'rgba(255,255,255,0.2)' }}
               >

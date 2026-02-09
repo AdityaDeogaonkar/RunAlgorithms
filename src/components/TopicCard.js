@@ -1,20 +1,36 @@
 import React from 'react';
-import { Card, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function TopicCard({ topic }) {
+  const { solvedQuestions } = useAuth();
+
+  const totalProblems = topic.questions.length;
+  const solvedCount = topic.questions.filter(
+    q => solvedQuestions.includes(`${topic.id}-${q.id}`)
+  ).length;
+  const progressPercent = totalProblems > 0 ? (solvedCount / totalProblems) * 100 : 0;
+
   return (
-    <Card className="h-100 shadow-sm">
-      <Card.Body>
-        <Card.Title>{topic.title}</Card.Title>
-        <Card.Text>
-          {topic.description}
-        </Card.Text>
-        <Button as={Link} to={`/topic/${topic.id}`} variant="primary">
-          Start Learning
-        </Button>
-      </Card.Body>
-    </Card>
+    <div className="topic-card h-100">
+      <div className="topic-title">{topic.title}</div>
+      <div className="topic-desc">
+        {topic.description.length > 80
+          ? topic.description.substring(0, 80) + '...'
+          : topic.description}
+      </div>
+      <div className="topic-progress-bar">
+        <div
+          className="topic-progress-fill"
+          style={{ width: `${progressPercent}%` }}
+        />
+      </div>
+      <div className="topic-meta">
+        <span className="topic-count">
+          {solvedCount}/{totalProblems} solved
+        </span>
+        <span>{totalProblems} problems</span>
+      </div>
+    </div>
   );
 }
 

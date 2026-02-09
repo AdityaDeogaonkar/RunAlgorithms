@@ -2,7 +2,8 @@ export const companies = [
   {
     id: "google",
     name: "Google",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
+    domain: "google.com",
+    logo: "https://logo.clearbit.com/google.com",
     description: "Focuses on Graphs, DP, Trees, and obscure algorithms.",
     questions: [
       { id: 1, title: "Two Sum", difficulty: "Easy", link: "https://leetcode.com/problems/two-sum/" },
@@ -60,7 +61,8 @@ export const companies = [
   {
     id: "amazon",
     name: "Amazon",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+    domain: "amazon.com",
+    logo: "https://logo.clearbit.com/amazon.com",
     description: "Heavy on Arrays, Strings, HashMaps, and 'Top K' elements.",
     questions: [
       { id: 1, title: "Two Sum", difficulty: "Easy", link: "https://leetcode.com/problems/two-sum/" },
@@ -118,7 +120,8 @@ export const companies = [
   {
     id: "meta",
     name: "Meta",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/a/ab/Meta-Logo.png",
+    domain: "meta.com",
+    logo: "https://logo.clearbit.com/meta.com",
     description: "Speed is key. Arrays, Strings, and Graphs. Known for asking questions exactly from LeetCode.",
     questions: [
       { id: 1, title: "Regular Expression Matching", difficulty: "Hard", link: "https://leetcode.com/problems/regular-expression-matching/" },
@@ -171,7 +174,8 @@ export const companies = [
   {
     id: "microsoft",
     name: "Microsoft",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
+    domain: "microsoft.com",
+    logo: "https://logo.clearbit.com/microsoft.com",
     description: "Standard algorithms, Trees, Linked Lists, and Matrix manipulation.",
     questions: [
       { id: 1, title: "Spiral Matrix", difficulty: "Medium", link: "https://leetcode.com/problems/spiral-matrix/" },
@@ -219,7 +223,8 @@ export const companies = [
   {
     id: "netflix",
     name: "Netflix",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",
+    domain: "netflix.com",
+    logo: "https://logo.clearbit.com/netflix.com",
     description: "System Design heavy, but asks tricky Logical puzzles and Caching problems.",
     questions: [
       { id: 1, title: "LRU Cache", difficulty: "Medium", link: "https://leetcode.com/problems/lru-cache/" },
@@ -252,7 +257,8 @@ export const companies = [
   {
     id: "uber",
     name: "Uber",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png",
+    domain: "uber.com",
+    logo: "https://logo.clearbit.com/uber.com",
     description: "Graphs, Maps, and Scalability problems.",
     questions: [
       { id: 1, title: "Bus Routes", difficulty: "Hard", link: "https://leetcode.com/problems/bus-routes/" },
@@ -285,7 +291,8 @@ export const companies = [
   {
     id: "apple",
     name: "Apple",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
+    domain: "apple.com",
+    logo: "https://logo.clearbit.com/apple.com",
     description: "Practical problems, Arrays, Strings, and C++ fundamentals.",
     questions: [
       { id: 1, title: "Two Sum", difficulty: "Easy", link: "https://leetcode.com/problems/two-sum/" },
@@ -318,7 +325,8 @@ export const companies = [
   {
     id: "linkedin",
     name: "LinkedIn",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png",
+    domain: "linkedin.com",
+    logo: "https://logo.clearbit.com/linkedin.com",
     description: "HashMaps, Intervals, and 'Retain Best Cache' problems.",
     questions: [
       { id: 1, title: "Max Points on a Line", difficulty: "Hard", link: "https://leetcode.com/problems/max-points-on-a-line/" },
@@ -346,7 +354,8 @@ export const companies = [
   {
     id: "adobe",
     name: "Adobe",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/d/d2/Adobe_Corporate_Logo.png",
+    domain: "adobe.com",
+    logo: "https://logo.clearbit.com/adobe.com",
     description: "Strings, Geometry, and DP.",
     questions: [
       { id: 1, title: "Two Sum", difficulty: "Easy", link: "https://leetcode.com/problems/two-sum/" },
@@ -374,7 +383,8 @@ export const companies = [
   {
     id: "oracle",
     name: "Oracle",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/5/50/Oracle_logo.svg",
+    domain: "oracle.com",
+    logo: "https://logo.clearbit.com/oracle.com",
     description: "Database internals, Strings, and Arrays.",
     questions: [
       { id: 1, title: "LRU Cache", difficulty: "Medium", link: "https://leetcode.com/problems/lru-cache/" },
@@ -402,7 +412,8 @@ export const companies = [
   {
     id: "salesforce",
     name: "Salesforce",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg",
+    domain: "salesforce.com",
+    logo: "https://logo.clearbit.com/salesforce.com",
     description: "Java-heavy concepts, OOD, and Arrays.",
     questions: [
       { id: 1, title: "Valid Parentheses", difficulty: "Easy", link: "https://leetcode.com/problems/valid-parentheses/" },
@@ -430,7 +441,8 @@ export const companies = [
   {
     id: "atlassian",
     name: "Atlassian",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/2/2c/Atlassian_logo.svg",
+    domain: "atlassian.com",
+    logo: "https://logo.clearbit.com/atlassian.com",
     description: "Rate Limiters, Caching, and Voting Systems.",
     questions: [
       { id: 1, title: "Logger Rate Limiter", difficulty: "Easy", link: "https://leetcode.com/problems/logger-rate-limiter/" },
@@ -458,7 +470,8 @@ export const companies = [
   {
     id: "goldman-sachs",
     name: "Goldman Sachs",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/6/61/Goldman_Sachs.svg",
+    domain: "goldmansachs.com",
+    logo: "https://logo.clearbit.com/goldmansachs.com",
     description: "Math, DP, and Matrix problems.",
     questions: [
       { id: 1, title: "Trapping Rain Water", difficulty: "Hard", link: "https://leetcode.com/problems/trapping-rain-water/" },
@@ -486,7 +499,8 @@ export const companies = [
   {
     id: "jpmorgan",
     name: "JPMorgan",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/a/af/J_P_Morgan_Chase_Logo_2008_1.svg",
+    domain: "jpmorgan.com",
+    logo: "https://logo.clearbit.com/jpmorgan.com",
     description: "Strings, Arrays, and simple Trees.",
     questions: [
       { id: 1, title: "Happy Number", difficulty: "Easy", link: "https://leetcode.com/problems/happy-number/" },
@@ -514,7 +528,8 @@ export const companies = [
   {
     id: "doordash",
     name: "DoorDash",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/e/e5/DoorDash_Logo.svg",
+    domain: "doordash.com",
+    logo: "https://logo.clearbit.com/doordash.com",
     description: "Graphs (City map), Intervals, and Scheduling.",
     questions: [
       { id: 1, title: "Employee Free Time", difficulty: "Hard", link: "https://leetcode.com/problems/employee-free-time/" },
@@ -542,7 +557,8 @@ export const companies = [
   {
     id: "stripe",
     name: "Stripe",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg",
+    domain: "stripe.com",
+    logo: "https://logo.clearbit.com/stripe.com",
     description: "String manipulation, Parsing, and Database concepts.",
     questions: [
       { id: 1, title: "First Missing Positive", difficulty: "Hard", link: "https://leetcode.com/problems/first-missing-positive/" },
@@ -570,7 +586,8 @@ export const companies = [
   {
     id: "snowflake",
     name: "Snowflake",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/f/ff/Snowflake_Logo.svg",
+    domain: "snowflake.com",
+    logo: "https://logo.clearbit.com/snowflake.com",
     description: "Concurrency, Systems, and complex Arrays.",
     questions: [
       { id: 1, title: "Trapping Rain Water", difficulty: "Hard", link: "https://leetcode.com/problems/trapping-rain-water/" },
@@ -598,7 +615,8 @@ export const companies = [
   {
     id: "databricks",
     name: "Databricks",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/9/93/Databricks_Logo.png",
+    domain: "databricks.com",
+    logo: "https://logo.clearbit.com/databricks.com",
     description: "Trees, Graphs, and Hard implementation problems.",
     questions: [
       { id: 1, title: "Closest Leaf in a Binary Tree", difficulty: "Medium", link: "https://leetcode.com/problems/closest-leaf-in-a-binary-tree/" },
@@ -626,7 +644,8 @@ export const companies = [
   {
     id: "bloomberg",
     name: "Bloomberg",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/5/52/Bloomberg_logo.svg",
+    domain: "bloomberg.com",
+    logo: "https://logo.clearbit.com/bloomberg.com",
     description: "Stacks, Queues, and Linked List manipulation.",
     questions: [
       { id: 1, title: "Design Underground System", difficulty: "Medium", link: "https://leetcode.com/problems/design-underground-system/" },
@@ -654,7 +673,8 @@ export const companies = [
   {
     id: "airbnb",
     name: "Airbnb",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_B%C3%A9lo.svg",
+    domain: "airbnb.com",
+    logo: "https://logo.clearbit.com/airbnb.com",
     description: "Graph traversals, Shortest path (Flight/Booking systems).",
     questions: [
       { id: 1, title: "Alien Dictionary", difficulty: "Hard", link: "https://leetcode.com/problems/alien-dictionary/" },
